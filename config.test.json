@@ -1,0 +1,54 @@
+{
+  "app": {
+    "name": "amp",
+    "environment": "localhost",
+    "debug": true,
+    "defaultLanguage": "zh-CN"
+  },
+  "server": {
+    "host": "127.0.0.1",
+    "domain": "",
+    "port": 8080,
+    "writeTimeout": 10,
+    "readTimeout": 10,
+    "readHeaderTimeout": 10,
+    "idleTimeout": 20,
+    "websocketCloseTimeout": 10,
+    "maxUploadSize": 10.0,
+    "proxy": {
+      "protocol": "http",
+      "host": "",
+      "port": 80,
+      "base": ""
+    }
+  },
+  "database": {
+    "connection": "postgres",
+    "host": "192.168.10.157",
+    "port": 5432,
+    "name": "amp",
+    "username": "postgres",
+    "password": "Amp@0227",
+    "options": "sslmode=disable application_name=amp",
+    "maxOpenConnections": 20,
+    "maxIdleConnections": 20,
+    "maxLifetime": 300,
+    "defaultReadQueryTimeout": 20000,
+    "defaultWriteQueryTimeout": 40000,
+    "config": {
+      "skipDefaultTransaction": false,
+      "dryRun": false,
+      "prepareStmt": true,
+      "disableNestedTransaction": false,
+      "allowGlobalUpdate": false,
+      "disableAutomaticPing": true,
+      "disableForeignKeyConstraintWhenMigrating": false
+    }
+  },
+  "auth": {
+    "jwt": {
+      "secret": "Enr0qW4mBXBNSjLAD8rMtiCWNjbYpZE4rYHHHxbuW+SAssWnJ4eMeEowXOnY1fgDhqpkBsy45bCYnEC707ZcLtCMkoeNLvZ6RuHYs2m9Fv0uAlYzHmARxDOAY+jnOzmvjEDp7qjNkOLwael/C6kWk4XuPam5DsBzQcEamSXEAqV/JV/Ti+NW7/7ktaWVLdnfeXwCZN3XecwdPPmpwPffkRbmmL74cgJGQWRIEsQ/ynfXHWCFHeDJrKgscXJcGwwF9dyN6zqDTDcpN+OdwvRXbhYzRc/OSAP1XIWqJTdzaursvsQn0Gfd5LsgF3/ttQL7Thv22em7WGZFy9Uf+VzyGg==",
+      "expiry": 86400
+    }
+  }
+}

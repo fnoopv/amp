@@ -1,0 +1,9 @@
+{
+  "required": ":field是必须的",
+  "min.numeric": ":field最小值为 :min",
+  "max.numeric": ":field最大值为 :max",
+  "in": ":field的值必须是 :values 中的一个",
+  "int": ":field的值必须为整数",
+  "exists": ":field已存在",
+  "same": ":field和:other不相同"
+}

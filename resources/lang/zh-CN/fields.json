@@ -1,0 +1,11 @@
+{
+  "email": "邮箱",
+  "nick_name": "显示名",
+  "username": "用户名",
+  "password": "密码",
+  "created_at": "创建时间",
+  "updated_at": "更新时间",
+  "old_password": "原密码",
+  "new_password": "新密码",
+  "confirm_password": "确认新密码"
+}
