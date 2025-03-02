@@ -16,6 +16,7 @@ type Service interface {
 	Create(ctx context.Context, user *dto.UserCreate) (string, error)
 	Update(ctx context.Context, id string, user *dto.UserUpdate) error
 	Delete(ctx context.Context, id string) error
+	FindByID(ctx context.Context, id string) (*dto.User, error)
 	UpdatePassword(ctx context.Context, id, pwd string) error
 	ResetPassword(ctx context.Context, id string) (string, error)
 }
@@ -36,8 +37,9 @@ func (co *Controller) RegisterRoutes(router *goyave.Router) {
 	subRouter.Post("/", co.Create).ValidateBody(CreateRequest)
 
 	userRouter := subRouter.Subrouter("/{id}")
+	userRouter.Get("/", co.FindByID)
 	userRouter.Delete("/", co.Delete)
-	userRouter.Put("/", co.Update).ValidateBody(UpdateRequest)
+	userRouter.Patch("/", co.Update).ValidateBody(UpdateRequest)
 	userRouter.Post("/pwd", co.UpdatePassword).ValidateBody(UpdatePasswordRequest)
 	userRouter.Post("/pwd/reset", co.ResetPassword)
 }
@@ -90,6 +92,21 @@ func (co *Controller) Delete(response *goyave.Response, request *goyave.Request)
 	}
 
 	response.JSON(http.StatusOK, dto.SuccessResponse)
+}
+
+// Delete 删除单个用户
+func (co *Controller) FindByID(response *goyave.Response, request *goyave.Request) {
+	id := request.RouteParams["id"]
+
+	user, err := co.UserService.FindByID(request.Context(), id)
+	if err != nil {
+		response.Error(err)
+	}
+
+	response.JSON(http.StatusOK, dto.CommonResponse{
+		Message: dto.SuccessMessage,
+		Data:    user,
+	})
 }
 
 // UpdatePassword 更改密码

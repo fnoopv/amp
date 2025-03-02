@@ -18,9 +18,10 @@ type Repository interface {
 	Paginate(ctx context.Context, page, pageSize int) (*database.Paginator[*model.User], error)
 	Create(ctx context.Context, user *model.User) error
 	Update(ctx context.Context, id string, user *model.User) error
-	UpdatePassword(ctx context.Context, id, pwd string) error
-	FindByUsername(ctx context.Context, username string) (*model.User, error)
 	Delete(ctx context.Context, id string) error
+	FindByID(ctx context.Context, id string) (*model.User, error)
+	FindByUsername(ctx context.Context, username string) (*model.User, error)
+	UpdatePassword(ctx context.Context, id, pwd string) error
 }
 
 type Service struct {
@@ -98,6 +99,13 @@ func (se *Service) ResetPassword(ctx context.Context, id string) (string, error)
 	return pwdStr, errors.New(err)
 }
 
+// FindByID 根据ID获取用户信息
+func (se *Service) FindByID(ctx context.Context, id string) (*dto.User, error) {
+	user, err := se.repository.FindByID(ctx, id)
+
+	return typeutil.MustConvert[*dto.User](user), errors.New(err)
+}
+
 // FindByUsername 根据用户名查找用户, 登录认证接口，请勿更改
 func (se *Service) FindByUsername(ctx context.Context, username any) (*dto.UserInternal, error) {
 	user, err := se.repository.FindByUsername(ctx, fmt.Sprintf("%v", username))
@@ -106,6 +114,6 @@ func (se *Service) FindByUsername(ctx context.Context, username any) (*dto.UserI
 }
 
 // Name 返回服务名称,框架使用
-func (s *Service) Name() string {
+func (se *Service) Name() string {
 	return service.User
 }

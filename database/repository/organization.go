@@ -40,11 +40,9 @@ func (us *Organization) FindByID(ctx context.Context, id string) (*model.Organiz
 	return org, errors.New(db.Error)
 }
 
-// DeleteOrganizations 根据ID列表删除组织
-func (us *Organization) DeleteOrganizations(ctx context.Context, ids []string) error {
-	orgs := []*model.Organization{}
-
-	db := us.DB.Delete(&orgs, ids)
+// Delete 根据ID列表删除组织
+func (us *Organization) Delete(ctx context.Context, id string) error {
+	db := us.DB.Delete(&model.Organization{}, id)
 
 	return errors.New(db.Error)
 }
