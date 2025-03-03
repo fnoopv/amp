@@ -50,5 +50,9 @@
       "secret": "Enr0qW4mBXBNSjLAD8rMtiCWNjbYpZE4rYHHHxbuW+SAssWnJ4eMeEowXOnY1fgDhqpkBsy45bCYnEC707ZcLtCMkoeNLvZ6RuHYs2m9Fv0uAlYzHmARxDOAY+jnOzmvjEDp7qjNkOLwael/C6kWk4XuPam5DsBzQcEamSXEAqV/JV/Ti+NW7/7ktaWVLdnfeXwCZN3XecwdPPmpwPffkRbmmL74cgJGQWRIEsQ/ynfXHWCFHeDJrKgscXJcGwwF9dyN6zqDTDcpN+OdwvRXbhYzRc/OSAP1XIWqJTdzaursvsQn0Gfd5LsgF3/ttQL7Thv22em7WGZFy9Uf+VzyGg==",
       "expiry": 86400
     }
+  },
+  "redis": {
+    "host": "192.168.10.157",
+    "port": "6379"
   }
 }

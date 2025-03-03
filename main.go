@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/fnoopv/amp/database/repository"
+	"github.com/fnoopv/amp/http/redis"
 	"github.com/fnoopv/amp/http/route"
 	"github.com/fnoopv/amp/pkg/migrate"
 	"github.com/fnoopv/amp/service/organization"
@@ -59,6 +60,16 @@ func main() {
 			os.Exit(3)
 		}
 		server.Logger.Info("Migration finished")
+
+		// 连接redis
+		server.Logger.Info("Starting connect redis ...")
+		// FIXME: GetInt报错,见 https://github.com/go-goyave/goyave/discussions/243
+		redisAddress := fmt.Sprintf("%s:%d", s.Config().GetString("redis.host"), s.Config().GetInt("redis.port"))
+		if err := redis.Initialize(redisAddress); err != nil {
+			server.Logger.Error(err)
+			os.Exit(4)
+		}
+		server.Logger.Info("Redis connect success")
 
 		server.Logger.Info("Server is listening", "host", s.Host())
 	})
