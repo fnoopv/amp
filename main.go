@@ -7,6 +7,7 @@ import (
 
 	"github.com/fnoopv/amp/database/repository"
 	"github.com/fnoopv/amp/http/route"
+	"github.com/fnoopv/amp/pkg/migrate"
 	"github.com/fnoopv/amp/service/organization"
 	"github.com/fnoopv/amp/service/user"
 
@@ -18,6 +19,9 @@ import (
 
 //go:embed resources
 var resources embed.FS
+
+//go:embed database/migrations/*.sql
+var migrations embed.FS
 
 func main() {
 	resources := fsutil.NewEmbed(resources)
@@ -41,6 +45,21 @@ func main() {
 	server.RegisterSignalHook()
 
 	server.RegisterStartupHook(func(s *goyave.Server) {
+		// 迁移数据库表
+		server.Logger.Info("Starting migration tables ...")
+		dsn := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable",
+			s.Config().GetString("database.username"),
+			s.Config().GetString("database.password"),
+			s.Config().GetString("database.host"),
+			s.Config().GetInt("database.port"),
+			s.Config().GetString("database.name"))
+		err := migrate.Migrate(dsn, migrations)
+		if err != nil {
+			server.Logger.Error(err)
+			os.Exit(3)
+		}
+		server.Logger.Info("Migration finished")
+
 		server.Logger.Info("Server is listening", "host", s.Host())
 	})
 
