@@ -6,13 +6,14 @@ import (
 
 	"github.com/fnoopv/amp/dto"
 	"github.com/fnoopv/amp/service"
+	"goyave.dev/filter"
 	"goyave.dev/goyave/v5"
 	"goyave.dev/goyave/v5/database"
 	"goyave.dev/goyave/v5/util/typeutil"
 )
 
 type Service interface {
-	Paginate(ctx context.Context, page, pageSize int) (*database.PaginatorDTO[*dto.Organization], error)
+	Paginate(ctx context.Context, request *filter.Request) (*database.PaginatorDTO[*dto.Organization], error)
 	Create(ctx context.Context, organization *dto.OrganizationCreate) error
 	Update(ctx context.Context, id string, organization *dto.OrganizationUpdate) error
 	Delete(ctx context.Context, id string) error
@@ -31,7 +32,7 @@ func (co *Controller) Init(server *goyave.Server) {
 
 func (co *Controller) RegisterRoutes(router *goyave.Router) {
 	subRouter := router.Subrouter("/organizations")
-	subRouter.Get("/", co.Index).ValidateQuery(IndexRequest)
+	subRouter.Get("/", co.Index).ValidateQuery(filter.Validation)
 	subRouter.Post("/", co.Create).ValidateBody(CreateRequest)
 
 	orgRouter := subRouter.Subrouter("/{id}")
@@ -41,9 +42,7 @@ func (co *Controller) RegisterRoutes(router *goyave.Router) {
 }
 
 func (co *Controller) Index(response *goyave.Response, request *goyave.Request) {
-	query := typeutil.MustConvert[*dto.OrganizationIndex](request.Query)
-
-	paginator, err := co.organizationService.Paginate(request.Context(), query.Page, query.PageSize)
+	paginator, err := co.organizationService.Paginate(request.Context(), filter.NewRequest(request.Query))
 	if response.WriteDBError(err) {
 		return
 	}

@@ -1,14 +1,9 @@
 package user
 
 import (
-	"github.com/fnoopv/amp/http/validation"
 	"goyave.dev/goyave/v5"
 	v "goyave.dev/goyave/v5/validation"
 )
-
-func IndexRuquest(request *goyave.Request) v.RuleSet {
-	return validation.PaginationRuquest(request)
-}
 
 // CreateRequest 创建用户
 func CreateRequest(_ *goyave.Request) v.RuleSet {

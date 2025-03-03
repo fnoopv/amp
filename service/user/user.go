@@ -9,13 +9,14 @@ import (
 	"github.com/fnoopv/amp/pkg/password"
 	"github.com/fnoopv/amp/service"
 	"github.com/google/uuid"
+	"goyave.dev/filter"
 	"goyave.dev/goyave/v5/database"
 	"goyave.dev/goyave/v5/util/errors"
 	"goyave.dev/goyave/v5/util/typeutil"
 )
 
 type Repository interface {
-	Paginate(ctx context.Context, page, pageSize int) (*database.Paginator[*model.User], error)
+	Paginate(ctx context.Context, request *filter.Request) (*database.Paginator[*model.User], error)
 	Create(ctx context.Context, user *model.User) error
 	Update(ctx context.Context, id string, user *model.User) error
 	Delete(ctx context.Context, id string) error
@@ -35,8 +36,8 @@ func NewService(repository Repository) *Service {
 }
 
 // Paginate 分页
-func (se *Service) Paginate(ctx context.Context, page int, pageSize int) (*database.PaginatorDTO[*dto.User], error) {
-	paginator, err := se.repository.Paginate(ctx, page, pageSize)
+func (se *Service) Paginate(ctx context.Context, request *filter.Request) (*database.PaginatorDTO[*dto.User], error) {
+	paginator, err := se.repository.Paginate(ctx, request)
 
 	return typeutil.MustConvert[*database.PaginatorDTO[*dto.User]](paginator), errors.New(err)
 }

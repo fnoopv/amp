@@ -7,6 +7,7 @@ import (
 	"github.com/fnoopv/amp/dto"
 	"github.com/fnoopv/amp/service"
 	"github.com/google/uuid"
+	"goyave.dev/filter"
 	"goyave.dev/goyave/v5/database"
 	"goyave.dev/goyave/v5/util/errors"
 	"goyave.dev/goyave/v5/util/typeutil"
@@ -14,7 +15,7 @@ import (
 
 // Repository 组织仓库
 type Repository interface {
-	Paginate(ctx context.Context, page, pageSize int) (*database.Paginator[*model.Organization], error)
+	Paginate(ctx context.Context, request *filter.Request) (*database.Paginator[*model.Organization], error)
 	Create(ctx context.Context, organization *model.Organization) error
 	Update(ctx context.Context, id string, organization *model.Organization) error
 	Delete(ctx context.Context, id string) error
@@ -34,8 +35,8 @@ func NewService(repository Repository) *Service {
 }
 
 // Paginate 获取组织列表
-func (se *Service) Paginate(ctx context.Context, page, pageSize int) (*database.PaginatorDTO[*dto.Organization], error) {
-	paginator, err := se.repository.Paginate(ctx, page, pageSize)
+func (se *Service) Paginate(ctx context.Context, request *filter.Request) (*database.PaginatorDTO[*dto.Organization], error) {
+	paginator, err := se.repository.Paginate(ctx, request)
 
 	return typeutil.MustConvert[*database.PaginatorDTO[*dto.Organization]](paginator), errors.New(err)
 }

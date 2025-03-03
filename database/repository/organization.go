@@ -5,8 +5,10 @@ import (
 
 	"github.com/fnoopv/amp/database/model"
 	"gorm.io/gorm"
+	"goyave.dev/filter"
 	"goyave.dev/goyave/v5/database"
 	"goyave.dev/goyave/v5/util/errors"
+	"goyave.dev/goyave/v5/util/session"
 )
 
 // Organization 组织存储库
@@ -22,13 +24,12 @@ func NewOrganization(db *gorm.DB) *Organization {
 }
 
 // Paginate 返回分页器
-func (us *Organization) Paginate(ctx context.Context, page, pageSize int) (*database.Paginator[*model.Organization], error) {
+func (us *Organization) Paginate(ctx context.Context, request *filter.Request) (*database.Paginator[*model.Organization], error) {
 	users := []*model.Organization{}
 
-	paginator := database.NewPaginator(us.DB, page, pageSize, &users)
-	err := paginator.Find()
+	paginator, err := filter.Scope(session.DB(ctx, us.DB), request, &users)
 
-	return paginator, err
+	return paginator, errors.New(err)
 }
 
 // FindByID 根据ID获取组织信息

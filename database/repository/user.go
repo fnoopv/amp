@@ -5,8 +5,10 @@ import (
 
 	"github.com/fnoopv/amp/database/model"
 	"gorm.io/gorm"
+	"goyave.dev/filter"
 	"goyave.dev/goyave/v5/database"
 	"goyave.dev/goyave/v5/util/errors"
+	"goyave.dev/goyave/v5/util/session"
 )
 
 // User 用户存储库
@@ -22,13 +24,12 @@ func NewUser(db *gorm.DB) *User {
 }
 
 // Paginate 返回分页器
-func (us *User) Paginate(ctx context.Context, page, pageSize int) (*database.Paginator[*model.User], error) {
+func (us *User) Paginate(ctx context.Context, request *filter.Request) (*database.Paginator[*model.User], error) {
 	users := []*model.User{}
 
-	paginator := database.NewPaginator(us.DB, page, pageSize, &users)
-	err := paginator.Find()
+	paginator, err := filter.Scope(session.DB(ctx, us.DB), request, &users)
 
-	return paginator, err
+	return paginator, errors.New(err)
 }
 
 // FindByID 根据ID获取用户
