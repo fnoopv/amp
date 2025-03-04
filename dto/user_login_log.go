@@ -10,12 +10,12 @@ type UserLoginLog struct {
 	UserID string `json:"user_id"`
 	// LoginAt 登录时间
 	LoginAt carbon.DateTime `json:"login_at"`
-	// LoginStatus 登录结果 success-登录成功,failure-失败
-	LoginStatus string `json:"login_status"`
+	// IsSuccess 登录是否成功
+	IsSuccess bool `json:"is_success"`
 	// IPAddress 登录IP
 	IPAddress string `json:"ip_address"`
 	// UserAgent 浏览器/设备原始字符串
-	UserAgent string `json:"user_agent"`
+	UserAgent string `json:"user_agent,omitempty"`
 	// FailureReason 登录失败原因
 	FailureReason string `json:"failure_reason,omitempty"`
 	// CreatedAt 创建时间

@@ -5,6 +5,7 @@ import (
 
 	"github.com/fnoopv/amp/database/model"
 	"github.com/fnoopv/amp/dto"
+	"github.com/google/uuid"
 	"goyave.dev/filter"
 	"goyave.dev/goyave/v5/database"
 	"goyave.dev/goyave/v5/util/errors"
@@ -30,4 +31,18 @@ func (se *Service) Paginate(ctx context.Context, request *filter.Request) (*data
 	paginator, err := se.userLoginLogRepository.Paginate(ctx, request)
 
 	return typeutil.MustConvert[*database.PaginatorDTO[*dto.UserLoginLog]](paginator), errors.New(err)
+}
+
+func (se *Service) Create(ctx context.Context, record *dto.UserLoginLog) error {
+	modelRecord := typeutil.Copy(&model.UserLoginLog{}, record)
+
+	uid, err := uuid.NewV7()
+	if err != nil {
+		return errors.New(err)
+	}
+	modelRecord.ID = uid.String()
+
+	err = se.userLoginLogRepository.Create(ctx, modelRecord)
+
+	return errors.New(err)
 }

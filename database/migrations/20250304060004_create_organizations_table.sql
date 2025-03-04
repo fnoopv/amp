@@ -12,6 +12,7 @@ CREATE TABLE "organizations" (
 CREATE INDEX "idx_parent_id" ON "organizations" ("parent_id");
 CREATE UNIQUE INDEX "uni_name" ON "organizations" ("name");
 CREATE INDEX "idx_kind" ON "organizations" ("kind")
+CREATE INDEX "idx_created_at" ON "organizations" ("created_at")
 
 -- migrate:down
 DROP TABLE IF EXISTS organizations;
