@@ -73,18 +73,24 @@ func main() {
 		}
 
 		// 连接redis
-		server.Logger.Info("Starting connect redis ...")
-		redisAddress := fmt.Sprintf("%s:%d", s.Config().GetString("redis.host"), s.Config().GetInt("redis.port"))
+		server.Logger.Info("Connectting redis server ...")
+		redisAddress := fmt.Sprintf("%s:%d",
+			s.Config().GetString("redis.host"),
+			s.Config().GetInt("redis.port"))
 		if err := redis.Initialize(redisAddress); err != nil {
 			server.Logger.Error(err)
 			os.Exit(4)
 		}
-		server.Logger.Info("Redis connect success")
+		server.Logger.Info("Connectting redis server success")
 
 		server.Logger.Info("Server is listening", "host", s.Host())
 	})
 
 	server.RegisterShutdownHook(func(s *goyave.Server) {
+		s.Logger.Info("Close redis connection ...")
+		redis.Client.Close()
+		s.Logger.Info("Close redis connection success")
+
 		s.Logger.Info("Server is shutting down")
 	})
 
