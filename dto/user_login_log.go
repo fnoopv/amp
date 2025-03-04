@@ -2,7 +2,7 @@ package dto
 
 import "github.com/dromara/carbon/v2"
 
-// UserLoginLog
+// UserLoginLog 用户登录日志
 type UserLoginLog struct {
 	// ID 唯一ID
 	ID string `json:"id"`

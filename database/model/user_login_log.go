@@ -9,7 +9,7 @@ type UserLoginLog struct {
 	// LoginAt 登录时间
 	LoginAt int64 `json:"login_at" gorm:"column:login_at;not null"`
 	// IsSuccess 是否登录成功
-	IsSuccess bool `gorm:"column:is_success;not null"`
+	IsSuccess bool `json:"is_success" gorm:"column:is_success;not null"`
 	// IPAddress 登录IP
 	IPAddress string `json:"ip_address" gorm:"column:ip_address;not null"`
 	// UserAgent 浏览器/设备原始字符串
