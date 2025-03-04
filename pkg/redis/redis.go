@@ -1,6 +1,7 @@
 package redis
 
 import (
+	"context"
 	"reflect"
 
 	"github.com/redis/rueidis"
@@ -34,6 +35,11 @@ func Initialize(address string) error {
 	client, err := rueidis.NewClient(rueidis.ClientOption{
 		InitAddress: []string{address},
 	})
+	if err != nil {
+		return errors.New(err)
+	}
+
+	err = client.Do(context.Background(), client.B().Ping().Build()).Error()
 	if err != nil {
 		return errors.New(err)
 	}
