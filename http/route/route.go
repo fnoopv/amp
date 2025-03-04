@@ -2,6 +2,7 @@ package route
 
 import (
 	"github.com/fnoopv/amp/dto"
+	"github.com/fnoopv/amp/http/controller/organization"
 	"github.com/fnoopv/amp/http/controller/user"
 	"github.com/fnoopv/amp/http/middleware"
 	"github.com/fnoopv/amp/service"
@@ -46,4 +47,5 @@ func Register(server *goyave.Server, router *goyave.Router) {
 	apiV1.GlobalMiddleware(authMiddleware).SetMeta(auth.MetaAuth, true)
 
 	apiV1.Controller(&user.Controller{})
+	apiV1.Controller(&organization.Controller{})
 }
