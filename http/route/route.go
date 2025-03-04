@@ -37,6 +37,7 @@ func Register(server *goyave.Server, router *goyave.Router) {
 			"is_mfa_verified": user.IsMFAVerified,
 		}, jwt.SigningMethodHS256)
 	}
+	apiV1.Controller(jwtController)
 
 	// 认证中间件
 	authenticator := auth.NewJWTAuthenticator(userService)
@@ -45,8 +46,4 @@ func Register(server *goyave.Server, router *goyave.Router) {
 	apiV1.GlobalMiddleware(authMiddleware).SetMeta(auth.MetaAuth, true)
 
 	apiV1.Controller(&user.Controller{})
-
-	// INFO: 不需要要认证的路由请放至最后
-	// 登录控制器
-	apiV1.Controller(jwtController).SetMeta(auth.MetaAuth, false)
 }
