@@ -54,5 +54,11 @@
   "redis": {
     "host": "10.129.138.211",
     "port": 6379
+  },
+  "user": {
+    "email": "admin@admin.local",
+    "nick_name": "AdminUser",
+    "username": "admin",
+    "password": "Admin@123"
   }
 }

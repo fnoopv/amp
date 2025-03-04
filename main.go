@@ -7,6 +7,7 @@ import (
 
 	"github.com/fnoopv/amp/database/repository"
 	"github.com/fnoopv/amp/http/route"
+	initializeuser "github.com/fnoopv/amp/pkg/initialize_user"
 	"github.com/fnoopv/amp/pkg/migrate"
 	"github.com/fnoopv/amp/pkg/redis"
 	"github.com/fnoopv/amp/service/organization"
@@ -60,6 +61,16 @@ func main() {
 			os.Exit(3)
 		}
 		server.Logger.Info("Migration finished")
+
+		if err := initializeuser.InitializeUser(
+			s.DB(),
+			s.Config().GetString("user.email"),
+			s.Config().GetString("user.nick_name"),
+			s.Config().GetString("user.username"),
+			s.Config().GetString("user.password")); err != nil {
+			server.Logger.Error(err)
+			os.Exit(1)
+		}
 
 		// 连接redis
 		server.Logger.Info("Starting connect redis ...")
