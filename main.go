@@ -48,7 +48,7 @@ func main() {
 
 	server.RegisterStartupHook(func(s *goyave.Server) {
 		// 迁移数据库表
-		server.Logger.Info("Starting migration tables ...")
+		server.Logger.Info("Migrate database tables ...")
 		dsn := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable",
 			s.Config().GetString("database.username"),
 			s.Config().GetString("database.password"),
@@ -60,8 +60,9 @@ func main() {
 			server.Logger.Error(err)
 			os.Exit(3)
 		}
-		server.Logger.Info("Migration finished")
+		server.Logger.Info("Migrate database tables success")
 
+		server.Logger.Info("Initialize system users ...")
 		if err := initializeuser.InitializeUser(
 			s.DB(),
 			s.Config().GetString("user.email"),
@@ -71,9 +72,10 @@ func main() {
 			server.Logger.Error(err)
 			os.Exit(1)
 		}
+		server.Logger.Info("Initialize system users success")
 
 		// 连接redis
-		server.Logger.Info("Connectting redis server ...")
+		server.Logger.Info("Connect to redis server ...")
 		redisAddress := fmt.Sprintf("%s:%d",
 			s.Config().GetString("redis.host"),
 			s.Config().GetInt("redis.port"))
@@ -81,7 +83,7 @@ func main() {
 			server.Logger.Error(err)
 			os.Exit(4)
 		}
-		server.Logger.Info("Connectting redis server success")
+		server.Logger.Info("Connect redis server success")
 
 		server.Logger.Info("Server is listening", "host", s.Host())
 	})
