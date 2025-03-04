@@ -14,7 +14,7 @@ type User struct {
 	// NickName 显示名
 	NickName string `json:"nick_name" gorm:"column:nick_name;not null"`
 	// UserName 用户名
-	UserName string `json:"username" gorm:"column:username;not null;uniqueIndex:uni_username"`
+	UserName string `json:"username" gorm:"column:username;not null"`
 	// Password 密码
 	Password string `json:"password" gorm:"column:password;not null;type:char(60)"`
 	// Status 账户状态 active-正常,inactive-未激活,disabled-禁用,banned-封禁

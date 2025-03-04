@@ -9,7 +9,7 @@ type Organization struct {
 	// ParentID 上级组织id, 为空时是顶级组织
 	ParentID string `json:"parent_id" gorm:"column:parent_id;default:null"`
 	// Name 组织名称
-	Name string `json:"name" gorm:"column:name;not null;unique:uni_name"`
+	Name string `json:"name" gorm:"column:name;not null"`
 	// Kind 组织类型 company-公司,department-部门
 	Kind string `json:"kind" gorm:"column:kind;not null"`
 	// Order 组织排序
