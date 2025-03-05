@@ -15,8 +15,8 @@ CREATE TABLE "users" (
 );
 CREATE INDEX "idx_nick_name" ON "users" ("nick_name");
 CREATE UNIQUE INDEX "uni_username" ON "users" ("username");
-CREATE INDEX "idx_status" ON "users" ("status")
-CREATE INDEX "idx_created_at" ON "users" ("created_at")
+CREATE INDEX "idx_status" ON "users" ("status");
+CREATE INDEX "idx_created_at" ON "users" ("created_at");
 
 -- migrate:down
 DROP TABLE IF EXISTS users;

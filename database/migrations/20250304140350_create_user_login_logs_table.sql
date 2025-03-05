@@ -1,7 +1,7 @@
 -- migrate:up
 CREATE TABLE "user_login_logs" (
     "id" char(36) NOT NULL,
-    "user_id" char(36) NOT null,
+    "user_id" char(36) NOT NULL,
     "login_at" timestamp NOT NULL,
     "is_success" boolean NOT NULL,
     "ip_address" varchar(255) NOT NULL,
@@ -13,9 +13,9 @@ CREATE TABLE "user_login_logs" (
 );
 CREATE INDEX "idx_user_id" ON "user_login_logs" ("user_id");
 CREATE INDEX "idx_login_at" ON "user_login_logs" ("login_at");
-CREATE INDEX "idx_is_success" ON "user_login_logs" ("is_success")
-CREATE INDEX "idx_ip_address" ON "user_login_logs" ("ip_address")
-CREATE INDEX "idx_created_at" ON "user_login_logs" ("created_at")
+CREATE INDEX "idx_is_success" ON "user_login_logs" ("is_success");
+CREATE INDEX "idx_ip_address" ON "user_login_logs" ("ip_address");
+CREATE INDEX "idx_created_at" ON "user_login_logs" ("created_at");
 
 -- migrate:down
-DROP TABLE IF EXISTS user_login_log;
+DROP TABLE IF EXISTS user_login_logs;
