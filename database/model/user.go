@@ -28,6 +28,8 @@ type User struct {
 	CreatedAt carbon.DateTime `json:"created_at" gorm:"column:created_at;autoCreateTime;type:datetime"`
 	// UpdatedAt 更新时间
 	UpdatedAt carbon.DateTime `json:"updated_at" gorm:"column:updated_at;autoUpdateTime;type:datetime"`
+
+	Roles []Role `json:"roles" gorm:"many2many:role_users;foreignKey:ID;joinForeignKey:UserID;References:ID;joinReferences:RoleID"`
 }
 
 // TableName 用户表表名

@@ -14,6 +14,8 @@ type Feature struct {
 	CreatedAt carbon.DateTime `json:"created_at" gorm:"column:created_at;autoCreateTime;type:datetime"`
 	// UpdatedAt 更新时间
 	UpdatedAt carbon.DateTime `json:"updated_at" gorm:"column:updated_at;autoUpdateTime;type:datetime"`
+
+	Roles []Role `json:"roles" gorm:"many2many:feature_role_permissions;foreignKey:ID;joinForeignKey:UserID;References:ID;joinReferences:RoleID"`
 }
 
 // Feature 功能表表名

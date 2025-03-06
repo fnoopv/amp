@@ -4,8 +4,8 @@ import (
 	"github.com/dromara/carbon/v2"
 )
 
-// UserRole 用户角色表
-type UserRole struct {
+// RoleUser 用户角色表
+type RoleUser struct {
 	// UserID 用户ID
 	UserID string `json:"user_id" gorm:"column:user_id;not null;primaryKey"`
 	// RoleID 角色ID
@@ -17,6 +17,6 @@ type UserRole struct {
 }
 
 // TableName 用户角色表表名
-func (UserRole) TableName() string {
-	return "user_roles"
+func (RoleUser) TableName() string {
+	return "role_users"
 }

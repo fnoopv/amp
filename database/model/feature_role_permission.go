@@ -2,8 +2,8 @@ package model
 
 import "github.com/dromara/carbon/v2"
 
-// RoleFeaturePermission 角色功能权限关联表
-type RoleFeaturePermission struct {
+// FeatureRolePermission 角色功能权限关联表
+type FeatureRolePermission struct {
 	// RoleID 角色ID
 	RoleID string `json:"role_id" gorm:"column:role_id;primaryKey"`
 	// FeatureID 功能ID
@@ -19,6 +19,6 @@ type RoleFeaturePermission struct {
 }
 
 // RoleFeaturePermission 角色功能权限表表名
-func (RoleFeaturePermission) TableName() string {
-	return "role_feature_permissions"
+func (FeatureRolePermission) TableName() string {
+	return "feature_role_permissions"
 }

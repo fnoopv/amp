@@ -1,5 +1,5 @@
 -- migrate:up
-CREATE TABLE "users" (
+CREATE TABLE users (
     "id" char(36) NOT NULL,
     "email" varchar(255) DEFAULT null,
     "nick_name" varchar(255) NOT NULL,
@@ -11,8 +11,9 @@ CREATE TABLE "users" (
     "password_updated_at" timestamp DEFAULT null,
     "created_at" timestamp NOT NULL,
     "updated_at" timestamp NOT NULL,
-    PRIMARY KEY ("id")
+    PRIMARY KEY (id)
 );
+
 CREATE INDEX "users_nick_name_idx" ON "users" ("nick_name");
 CREATE UNIQUE INDEX "users_username_uni" ON "users" ("username");
 CREATE INDEX "users_status_idx" ON "users" ("status");
