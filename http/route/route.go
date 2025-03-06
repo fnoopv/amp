@@ -34,7 +34,7 @@ func Register(server *goyave.Server, router *goyave.Router) {
 		jwtService := server.Service(auth.JWTServiceName).(*auth.JWTService)
 		return jwtService.GenerateTokenWithClaims(jwt.MapClaims{
 			"id":              user.ID,
-			"sub":             user.UserName,
+			"sub":             user.Username,
 			"is_mfa_verified": user.IsMFAVerified,
 		}, jwt.SigningMethodHS256)
 	}

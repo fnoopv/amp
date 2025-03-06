@@ -1,4 +1,4 @@
-package initializeuser
+package initialize
 
 import (
 	"reflect"
@@ -67,7 +67,7 @@ func InitializeUser(db *gorm.DB, email, nick_name, username, pwd string) error {
 	user.Password = hashedPwd
 
 	user.Email = email
-	user.UserName = username
+	user.Username = username
 	user.NickName = nick_name
 	user.Status = "active"
 	user.IsMFAActive = false

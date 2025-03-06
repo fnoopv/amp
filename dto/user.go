@@ -22,8 +22,8 @@ type User struct {
 	Email string `json:"email,omitempty"`
 	// NickName 显示名
 	NickName string `json:"nick_name"`
-	// UserName 用户名
-	UserName string `json:"username"`
+	// Username 用户名
+	Username string `json:"username"`
 	// Status 账户状态 active-正常,inactive-未激活,disabled-禁用,banned-封禁
 	Status string `json:"status"`
 	// IsMFAActive MFA是否已经绑定
@@ -48,8 +48,8 @@ type UserCreate struct {
 	Email string `json:"email"`
 	// NickName 显示名
 	NickName string `json:"nick_name"`
-	// UserName 用户名
-	UserName string `json:"username"`
+	// Username 用户名
+	Username string `json:"username"`
 	// Status 账户状态 active-正常,inactive-未激活,disabled-禁用,banned-封禁
 	Status string `json:"status"`
 }
@@ -80,6 +80,6 @@ type UserUpdate struct {
 	Email string `json:"email"`
 	// NickName 显示名
 	NickName string `json:"nick_name"`
-	// UserName 用户名
-	UserName string `json:"username"`
+	// Username 用户名
+	Username string `json:"username"`
 }

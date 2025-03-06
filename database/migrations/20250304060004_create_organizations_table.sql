@@ -9,10 +9,10 @@ CREATE TABLE "organizations" (
     "updated_at" timestamp NOT NULL,
     PRIMARY KEY ("id")
 );
-CREATE INDEX "idx_parent_id" ON "organizations" ("parent_id");
-CREATE UNIQUE INDEX "uni_name" ON "organizations" ("name");
-CREATE INDEX "idx_kind" ON "organizations" ("kind");
-CREATE INDEX "idx_created_at" ON "organizations" ("created_at");
+CREATE INDEX "organizations_parent_id_idx" ON "organizations" ("parent_id");
+CREATE UNIQUE INDEX "organizations_name_uni" ON "organizations" ("name");
+CREATE INDEX "organizations_kind_idx" ON "organizations" ("kind");
+CREATE INDEX "organizations_created_at_idx" ON "organizations" ("created_at");
 
 -- migrate:down
 DROP TABLE IF EXISTS organizations;

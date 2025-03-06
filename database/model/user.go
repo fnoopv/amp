@@ -13,10 +13,10 @@ type User struct {
 	Email string `json:"email" gorm:"column:email"`
 	// NickName 显示名
 	NickName string `json:"nick_name" gorm:"column:nick_name;not null"`
-	// UserName 用户名
-	UserName string `json:"username" gorm:"column:username;not null"`
+	// Username 用户名
+	Username string `json:"username" gorm:"column:username;not null"`
 	// Password 密码
-	Password string `json:"password" gorm:"column:password;not null;type:char(60)"`
+	Password string `json:"password" gorm:"column:password;not null;type:char;size:60"`
 	// Status 账户状态 active-正常,inactive-未激活,disabled-禁用,banned-封禁
 	Status string `json:"status" gorm:"column:status;not null"`
 	// MFAKey 多因素认证密钥

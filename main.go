@@ -3,11 +3,13 @@ package main
 import (
 	"embed"
 	"fmt"
+	"net"
 	"os"
+	"strconv"
 
 	"github.com/fnoopv/amp/database/repository"
 	"github.com/fnoopv/amp/http/route"
-	initializeuser "github.com/fnoopv/amp/pkg/initialize_user"
+	"github.com/fnoopv/amp/pkg/initialize"
 	"github.com/fnoopv/amp/pkg/migrate"
 	"github.com/fnoopv/amp/pkg/redis"
 	"github.com/fnoopv/amp/service/organization"
@@ -49,11 +51,14 @@ func main() {
 	server.RegisterStartupHook(func(s *goyave.Server) {
 		// 迁移数据库表
 		server.Logger.Info("Migrate database tables ...")
-		dsn := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable",
+		hostPort := net.JoinHostPort(
+			s.Config().GetString("database.host"),
+			strconv.Itoa(s.Config().GetInt("database.port")),
+		)
+		dsn := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable",
 			s.Config().GetString("database.username"),
 			s.Config().GetString("database.password"),
-			s.Config().GetString("database.host"),
-			s.Config().GetInt("database.port"),
+			hostPort,
 			s.Config().GetString("database.name"))
 		err := migrate.Migrate(dsn, migrations)
 		if err != nil {
@@ -63,7 +68,7 @@ func main() {
 		server.Logger.Info("Migrate database tables success")
 
 		server.Logger.Info("Initialize system users ...")
-		if err := initializeuser.InitializeUser(
+		if err := initialize.InitializeUser(
 			s.DB(),
 			s.Config().GetString("user.email"),
 			s.Config().GetString("user.nick_name"),

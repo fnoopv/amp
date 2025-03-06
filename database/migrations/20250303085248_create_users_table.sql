@@ -13,10 +13,10 @@ CREATE TABLE "users" (
     "updated_at" timestamp NOT NULL,
     PRIMARY KEY ("id")
 );
-CREATE INDEX "idx_nick_name" ON "users" ("nick_name");
-CREATE UNIQUE INDEX "uni_username" ON "users" ("username");
-CREATE INDEX "idx_status" ON "users" ("status");
-CREATE INDEX "idx_created_at" ON "users" ("created_at");
+CREATE INDEX "users_nick_name_idx" ON "users" ("nick_name");
+CREATE UNIQUE INDEX "users_username_uni" ON "users" ("username");
+CREATE INDEX "users_status_idx" ON "users" ("status");
+CREATE INDEX "users_created_at_idx" ON "users" ("created_at");
 
 -- migrate:down
 DROP TABLE IF EXISTS users;

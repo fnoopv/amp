@@ -11,11 +11,11 @@ CREATE TABLE "user_login_logs" (
     "updated_at" timestamp NOT NULL,
     PRIMARY KEY ("id")
 );
-CREATE INDEX "idx_user_id" ON "user_login_logs" ("user_id");
-CREATE INDEX "idx_login_at" ON "user_login_logs" ("login_at");
-CREATE INDEX "idx_is_success" ON "user_login_logs" ("is_success");
-CREATE INDEX "idx_ip_address" ON "user_login_logs" ("ip_address");
-CREATE INDEX "idx_created_at" ON "user_login_logs" ("created_at");
+CREATE INDEX "user_login_logs_user_id_idx" ON "user_login_logs" ("user_id");
+CREATE INDEX "user_login_logs_login_at_idx" ON "user_login_logs" ("login_at");
+CREATE INDEX "user_login_logs_is_success_idx" ON "user_login_logs" ("is_success");
+CREATE INDEX "user_login_logs_ip_address_idx" ON "user_login_logs" ("ip_address");
+CREATE INDEX "user_login_logs_created_at_idx" ON "user_login_logs" ("created_at");
 
 -- migrate:down
 DROP TABLE IF EXISTS user_login_logs;
