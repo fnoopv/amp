@@ -1,0 +1,52 @@
+linters:
+  enable-all: false
+  disable-all: false
+  fast: false
+  enable:
+    - bodyclose # 检查合同谈判body是否关闭
+    - containedctx # 检查结构体中是否包含context
+    - contextcheck # 检查函数是否使用非继承的context
+    - copyloopvar # 循环复制检测
+    - cyclop # 检查函数和包的圈复杂度
+    - errname # 检查标记错误是否以 Err 为前缀，错误类型是否以 Error 为后缀
+    - exptostd # 检测 golang.org/x/exp/ 中可被 std 函数替换的函数
+    - gocheckcompilerdirectives # 检查 go 编译器指令注释 (//go:) 是否有效
+    - goconst # 查找可用常量替换的重复字符串
+    - gofumpt # 代码格式检查
+    - goimports # 包导入检查
+    - gomoddirectives # go.mod文件检查
+    - gosec # 源代码安全检查
+    - goprintffuncname # 检查 printf 类函数是否以 f 结尾
+    - importas # 强制使用一致的导入别名
+    - intrange # 用于查找 for 循环可以使用整数范围的地方
+    - nonamedreturns # 检查命名返回
+    - nosprintfhostport # 检查url地址是否用Sprintf拼接
+    - perfsprint # 检查 fmt.Sprintf 是否可以被更快的替代方案取代
+    - predeclared # 查找和Go 预声明关键字重复的代码
+    - reassign # 检查变量是否已经重复分配
+    - recvcheck # 检查接收器类型的一致性
+    - sloglint # 确保使用 log/slog 时代码风格一致
+    - tagalign # 检查结构标签是否对齐
+    - unconvert # 删除不必要的类型转换
+    - unparam # 检查未使用的函数参数
+    - wastedassign # 检查无效赋值
+    - whitespace # 检查if ,for等是否存在不必要的换行
+
+linters-settings:
+  importas:
+    no-unaliased: false
+    no-extra-aliases: true
+    alias:
+      - pkg: goyave.dev/goyave/v5/validation
+        alias: v
+  tagalign:
+    align: true
+    sort: true
+    strict: false
+    order:
+      - json
+      - gorm
+  cyclop:
+    skip-tests: true
+    max-complexity: 10
+    package-average: 5
