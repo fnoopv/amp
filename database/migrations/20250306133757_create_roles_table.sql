@@ -6,6 +6,7 @@ CREATE TABLE roles (
     "is_builtin" boolean NOT NULL DEFAULT FALSE,
     "created_at" timestamp NOT NULL,
     "updated_at" timestamp NOT NULL,
+    "deleted_at" timestamp DEFAULT NULL,
     PRIMARY KEY (id)
 );
 

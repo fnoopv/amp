@@ -21,7 +21,6 @@ CREATE TABLE menus (
     CONSTRAINT fk_menus_menu
     FOREIGN KEY (parent_id)
     REFERENCES menus (id)
-    ON DELETE RESTRICT
     ON UPDATE CASCADE
 );
 

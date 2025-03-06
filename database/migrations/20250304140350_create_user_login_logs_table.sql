@@ -22,8 +22,6 @@ CREATE INDEX "user_login_logs_is_success_idx"
 ON "user_login_logs" ("is_success");
 CREATE INDEX "user_login_logs_ip_address_idx"
 ON "user_login_logs" ("ip_address");
-CREATE INDEX "user_login_logs_created_at_idx"
-ON "user_login_logs" ("created_at");
 
 -- migrate:down
 DROP TABLE IF EXISTS user_login_logs;

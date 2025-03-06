@@ -12,7 +12,7 @@ CREATE TABLE role_users (
     CONSTRAINT fk_role_users_role
     FOREIGN KEY (role_id)
     REFERENCES roles (id)
-    ON UPDATE CASCADE
+    ON DELETE CASCADE
 );
 
 -- migrate:down

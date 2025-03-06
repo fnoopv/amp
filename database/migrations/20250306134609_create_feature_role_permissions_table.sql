@@ -14,7 +14,7 @@ CREATE TABLE feature_role_permissions (
     CONSTRAINT fk_feature_roles_feature
     FOREIGN KEY (feature_id)
     REFERENCES features (id)
-    ON UPDATE CASCADE
+    ON DELETE CASCADE
 );
 
 -- migrate:down

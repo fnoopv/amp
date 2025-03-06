@@ -11,11 +11,13 @@ CREATE TABLE users (
     "password_updated_at" timestamp DEFAULT null,
     "created_at" timestamp NOT NULL,
     "updated_at" timestamp NOT NULL,
+    "deleted_at" timestamp DEFAULT null,
     PRIMARY KEY (id)
 );
 
 CREATE INDEX "users_nick_name_idx" ON "users" ("nick_name");
-CREATE UNIQUE INDEX "users_username_uni" ON "users" ("username");
+CREATE UNIQUE INDEX "users_username_deleted_at_uni"
+ON "users" ("username", "deleted_at");
 CREATE INDEX "users_status_idx" ON "users" ("status");
 CREATE INDEX "users_created_at_idx" ON "users" ("created_at");
 

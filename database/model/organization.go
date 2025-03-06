@@ -1,6 +1,9 @@
 package model
 
-import "github.com/dromara/carbon/v2"
+import (
+	"github.com/dromara/carbon/v2"
+	"gorm.io/gorm"
+)
 
 // Organization 组织架构
 type Organization struct {
@@ -18,6 +21,7 @@ type Organization struct {
 	CreatedAt carbon.DateTime `json:"created_at" gorm:"column:created_at;autoCreateTime;type:datetime"`
 	// UpdatedAt 更新时间
 	UpdatedAt carbon.DateTime `json:"updated_at" gorm:"column:updated_at;autoUpdateTime;type:datetime"`
+	DeletedAt gorm.DeletedAt
 }
 
 // TableName 组织架构表表名

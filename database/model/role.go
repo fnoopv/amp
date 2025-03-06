@@ -1,6 +1,9 @@
 package model
 
-import "github.com/dromara/carbon/v2"
+import (
+	"github.com/dromara/carbon/v2"
+	"gorm.io/gorm"
+)
 
 // Role 角色表
 type Role struct {
@@ -16,6 +19,7 @@ type Role struct {
 	CreatedAt carbon.DateTime `json:"created_at" gorm:"column:created_at;autoCreateTime;type:datetime"`
 	// UpdatedAt 更新时间
 	UpdatedAt carbon.DateTime `json:"updated_at" gorm:"column:updated_at;autoUpdateTime;type:datetime"`
+	DeletedAt gorm.DeletedAt
 
 	Users    []User    `json:"users" gorm:"many2many:role_users;foreignKey:ID;joinForeignKey:RoleID;References:ID;joinReferences:UserID"`
 	Features []Feature `json:"eatures" gorm:"many2many:feature_role_permissions;foreignKey:ID;joinForeignKey:RoleID;References:ID;joinReferences:FeatureID"`

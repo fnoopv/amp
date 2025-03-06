@@ -7,16 +7,16 @@ CREATE TABLE applications (
     "launched_at" timestamp DEFAULT NULL,
     "created_at" timestamp NOT NULL,
     "updated_at" timestamp NOT NULL,
+    "deleted_at" timestamp DEFAULT NULL,
     PRIMARY KEY (id),
 
     CONSTRAINT fk_application_orgsnization
     FOREIGN KEY (organization_id)
     REFERENCES organizations (id)
     ON UPDATE CASCADE
+    ON DELETE SET NULL
 );
-CREATE INDEX "applications_organization_id_idx"
-ON "applications" ("organization_id");
-CREATE UNIQUE INDEX "applications_name_uni" ON "organizations" ("name");
+CREATE INDEX applications_organization_id_idx ON applications (organization_id);
 
 -- migrate:down
 DROP TABLE IF EXISTS applications;
