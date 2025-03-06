@@ -8,6 +8,8 @@ type Menu struct {
 	ID string `json:"id" gorm:"column:id;primaryKey"`
 	// ParentID 上级菜单ID
 	ParentID string `json:"parent_id" gorm:"column:parent_id;default null"`
+	// FeatureID 所属功能ID
+	FeatureID string `json:"feature_id" gorm:"column:feature_id;not null"`
 	// Icon 图标
 	Icon string `json:"icon" gorm:"column:icon;not null"`
 	// Path 路径

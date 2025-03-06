@@ -6,6 +6,8 @@ import "github.com/dromara/carbon/v2"
 type API struct {
 	// ID 唯一ID
 	ID string `json:"id" gorm:"column:id;primaryKey"`
+	// FeatureID 所属功能ID
+	FeatureID string `json:"feature_id" gorm:"column:feature_id;not null"`
 	// Method 请求方法
 	Method string `json:"method" gorm:"column:method;not null"`
 	// Path 请求路径
