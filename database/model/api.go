@@ -22,5 +22,5 @@ type API struct {
 
 // API 接口表表名
 func (API) TableName() string {
-	return "api"
+	return "apis"
 }

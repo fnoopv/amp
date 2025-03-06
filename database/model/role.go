@@ -17,7 +17,7 @@ type Role struct {
 	// UpdatedAt 更新时间
 	UpdatedAt carbon.DateTime `json:"updated_at" gorm:"column:updated_at;autoUpdateTime;type:datetime"`
 
-	Users    []User    `json:"users" gorm:"many2many:user_users;foreignKey:ID;joinForeignKey:RoleID;References:ID;joinReferences:UserID"`
+	Users    []User    `json:"users" gorm:"many2many:role_users;foreignKey:ID;joinForeignKey:RoleID;References:ID;joinReferences:UserID"`
 	Features []Feature `json:"eatures" gorm:"many2many:feature_role_permissions;foreignKey:ID;joinForeignKey:RoleID;References:ID;joinReferences:FeatureID"`
 }
 
