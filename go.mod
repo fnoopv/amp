@@ -2,6 +2,8 @@ module github.com/fnoopv/amp
 
 go 1.24
 
+toolchain go1.24.1
+
 require (
 	github.com/amacneil/dbmate/v2 v2.26.0
 	github.com/dromara/carbon/v2 v2.5.3
