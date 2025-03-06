@@ -4,8 +4,7 @@ import (
 	"github.com/dromara/carbon/v2"
 )
 
-// User 用户
-// TODO: 关联角色
+// User 用户表
 type User struct {
 	// ID 唯一ID
 	ID string `json:"id" gorm:"column:id;primaryKey"`
