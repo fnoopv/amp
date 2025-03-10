@@ -10,7 +10,7 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.6.0
 	github.com/redis/rueidis v1.0.55
-	golang.org/x/crypto v0.35.0
+	golang.org/x/crypto v0.36.0
 	gorm.io/gorm v1.25.12
 	goyave.dev/filter v0.7.0
 	goyave.dev/goyave/v5 v5.5.6
@@ -26,9 +26,9 @@ require (
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/lib/pq v1.10.9 // indirect
 	github.com/samber/lo v1.49.1 // indirect
-	golang.org/x/sync v0.11.0 // indirect
-	golang.org/x/sys v0.30.0 // indirect
-	golang.org/x/text v0.22.0 // indirect
+	golang.org/x/sync v0.12.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/text v0.23.0 // indirect
 	gorm.io/driver/postgres v1.5.11 // indirect
 	goyave.dev/copier v0.4.4 // indirect
 )
