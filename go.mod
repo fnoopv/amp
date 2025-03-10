@@ -6,7 +6,7 @@ toolchain go1.24.1
 
 require (
 	github.com/amacneil/dbmate/v2 v2.26.0
-	github.com/dromara/carbon/v2 v2.5.3
+	github.com/dromara/carbon/v2 v2.5.4
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.6.0
 	github.com/redis/rueidis v1.0.55
