@@ -12,7 +12,7 @@ require (
 	github.com/redis/rueidis v1.0.55
 	golang.org/x/crypto v0.35.0
 	gorm.io/gorm v1.25.12
-	goyave.dev/filter v0.7.0
+	goyave.dev/filter v0.8.0
 	goyave.dev/goyave/v5 v5.5.6
 )
 
