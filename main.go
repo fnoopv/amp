@@ -11,6 +11,7 @@ import (
 	"github.com/fnoopv/amp/http/route"
 	"github.com/fnoopv/amp/pkg/external/redis"
 	"github.com/fnoopv/amp/pkg/migrate"
+	"github.com/fnoopv/amp/service/application"
 	"github.com/fnoopv/amp/service/organization"
 	"github.com/fnoopv/amp/service/user"
 
@@ -109,4 +110,8 @@ func registerServices(server *goyave.Server) {
 	organizationRepository := repository.NewOrganization(server.DB())
 	organizationService := organization.NewService(organizationRepository)
 	server.RegisterService(organizationService)
+
+	appRepository := repository.NewApplication(server.DB())
+	appService := application.NewService(appRepository)
+	server.RegisterService(appService)
 }

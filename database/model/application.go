@@ -12,9 +12,9 @@ type Application struct {
 	// Name 名称
 	Name string `json:"name" gorm:"column:name;not null"`
 	// OrganizationID 所属组织ID
-	OrganizationID string `json:"organization_id" gorm:"column:organization_id"`
-	// Method 请求方法
-	LaunchedAt *carbon.DateTime `json:"launched_at" gorm:"column:launched_at;default:null"`
+	OrganizationID string `json:"organization_id" gorm:"column:organization_id;default:null"`
+	// LaunchedAt 上线时间
+	LaunchedAt *carbon.Date `json:"launched_at" gorm:"column:launched_at;default:null"`
 	// Description 描述
 	Description string `json:"description" gorm:"column:description;default:null"`
 	// CreatedAt 创建时间
@@ -22,6 +22,8 @@ type Application struct {
 	// UpdatedAt 更新时间
 	UpdatedAt carbon.DateTime `json:"updated_at" gorm:"column:updated_at;autoUpdateTime;type:datetime"`
 	DeletedAt gorm.DeletedAt
+
+	Organization Organization
 }
 
 // Application 应用表表名
