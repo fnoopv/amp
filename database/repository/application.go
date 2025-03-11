@@ -35,14 +35,14 @@ func (ap *Application) Create(ctx context.Context, app *model.Application) error
 	return errors.New(db.Error)
 }
 
-func (ap *Application) Update(ctx context.Context, id string, app *model.Application) error {
-	db := ap.db.Model(&model.Application{}).Where("id = ?", id).Updates(app)
+func (ap *Application) Update(ctx context.Context, app *model.Application) error {
+	db := ap.db.Model(&model.Application{ID: app.ID}).Select("Name", "OrganizationID", "LaunchedAt", "Description").Updates(app)
 
 	return errors.New(db.Error)
 }
 
-func (ap *Application) Delete(ctx context.Context, id string) error {
-	db := ap.db.Delete(&model.Application{ID: id})
+func (ap *Application) Delete(ctx context.Context, ids []string) error {
+	db := ap.db.Where("id in ?", ids).Delete(&model.Application{})
 
 	return errors.New(db.Error)
 }

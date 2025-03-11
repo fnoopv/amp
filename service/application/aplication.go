@@ -16,8 +16,8 @@ import (
 type Repository interface {
 	Paginate(ctx context.Context, request *filter.Request) (*database.Paginator[*model.Application], error)
 	Create(ctx context.Context, app *model.Application) error
-	Update(ctx context.Context, id string, app *model.Application) error
-	Delete(ctx context.Context, id string) error
+	Update(ctx context.Context, app *model.Application) error
+	Delete(ctx context.Context, id []string) error
 }
 
 type Service struct {
@@ -50,16 +50,16 @@ func (se *Service) Create(ctx context.Context, app *dto.ApplicationCreate) error
 	return errors.New(err)
 }
 
-func (se *Service) Update(ctx context.Context, id string, app *dto.ApplicationUpdate) error {
+func (se *Service) Update(ctx context.Context, app *dto.ApplicationUpdate) error {
 	modelApp := typeutil.Copy(&model.Application{}, app)
 
-	err := se.appRepository.Update(ctx, id, modelApp)
+	err := se.appRepository.Update(ctx, modelApp)
 
 	return errors.New(err)
 }
 
-func (se *Service) Delete(ctx context.Context, id string) error {
-	err := se.appRepository.Delete(ctx, id)
+func (se *Service) Delete(ctx context.Context, ids []string) error {
+	err := se.appRepository.Delete(ctx, ids)
 
 	return errors.New(err)
 }

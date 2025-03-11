@@ -15,8 +15,8 @@ import (
 type Service interface {
 	Paginate(ctx context.Context, request *filter.Request) (*database.PaginatorDTO[*dto.Application], error)
 	Create(ctx context.Context, app *dto.ApplicationCreate) error
-	Update(ctx context.Context, id string, app *dto.ApplicationUpdate) error
-	Delete(ctx context.Context, id string) error
+	Update(ctx context.Context, app *dto.ApplicationUpdate) error
+	Delete(ctx context.Context, ids []string) error
 }
 
 type Controller struct {
@@ -34,9 +34,8 @@ func (co *Controller) RegisterRoutes(router *goyave.Router) {
 	subRouter.Get("/", co.Index).ValidateQuery(filter.Validation)
 	subRouter.Post("/", co.Create).ValidateBody(CreateRequest)
 
-	userRouter := subRouter.Subrouter("/{id}")
-	userRouter.Delete("/", co.Delete)
-	userRouter.Patch("/", co.Update).ValidateBody(UpdateRequest)
+	subRouter.Post("/delete", co.Delete).ValidateBody(DeleteRequest)
+	subRouter.Post("/update", co.Update).ValidateBody(UpdateRequest)
 }
 
 func (co *Controller) Index(response *goyave.Response, request *goyave.Request) {
@@ -61,10 +60,9 @@ func (co *Controller) Create(response *goyave.Response, request *goyave.Request)
 }
 
 func (co *Controller) Update(response *goyave.Response, request *goyave.Request) {
-	id := request.RouteParams["id"]
 	req := typeutil.MustConvert[*dto.ApplicationUpdate](request.Data)
 
-	if err := co.AppService.Update(request.Context(), id, req); err != nil {
+	if err := co.AppService.Update(request.Context(), req); err != nil {
 		response.Error(err)
 		return
 	}
@@ -73,9 +71,8 @@ func (co *Controller) Update(response *goyave.Response, request *goyave.Request)
 }
 
 func (co *Controller) Delete(response *goyave.Response, request *goyave.Request) {
-	id := request.RouteParams["id"]
-
-	if err := co.AppService.Delete(request.Context(), id); err != nil {
+	req := typeutil.MustConvert[*dto.ApplicationDelete](request.Data)
+	if err := co.AppService.Delete(request.Context(), req.IDs); err != nil {
 		response.Error(err)
 		return
 	}

@@ -35,6 +35,8 @@ type ApplicationCreate struct {
 }
 
 type ApplicationUpdate struct {
+	// ID 唯一ID
+	ID string `json:"id"`
 	// Name 名称
 	Name string `json:"name"`
 	// OrganizationID 所属组织ID
@@ -43,4 +45,8 @@ type ApplicationUpdate struct {
 	LaunchedAt *carbon.Date `json:"launched_at,omitempty,omitzero"`
 	// Description 描述
 	Description string `json:"description,omitempty,omitzero"`
+}
+
+type ApplicationDelete struct {
+	IDs []string `json:"ids"`
 }
