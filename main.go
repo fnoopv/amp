@@ -15,6 +15,7 @@ import (
 	"github.com/fnoopv/amp/service/organization"
 	"github.com/fnoopv/amp/service/user"
 
+	"goyave.dev/filter"
 	"goyave.dev/goyave/v5"
 	_ "goyave.dev/goyave/v5/database/dialect/postgres"
 	"goyave.dev/goyave/v5/util/errors"
@@ -49,6 +50,8 @@ func main() {
 	server.RegisterSignalHook()
 
 	server.RegisterStartupHook(func(s *goyave.Server) {
+		filter.QueryParamPage = "currentPage"
+		filter.QueryParamPerPage = "pageSize"
 		// 迁移数据库表
 		server.Logger.Info("Migrate database tables ...")
 		hostPort := net.JoinHostPort(

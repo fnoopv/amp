@@ -54,8 +54,8 @@ func (co *Controller) Index(response *goyave.Response, request *goyave.Request) 
 func (co *Controller) Create(response *goyave.Response, request *goyave.Request) {
 	req := typeutil.MustConvert[*dto.ApplicationCreate](request.Data)
 	err := co.AppService.Create(request.Context(), req)
-	if err != nil {
-		response.Error(err)
+	if response.WriteDBError(err) {
+		return
 	}
 	response.JSON(http.StatusOK, dto.SuccessResponse)
 }
@@ -66,6 +66,7 @@ func (co *Controller) Update(response *goyave.Response, request *goyave.Request)
 
 	if err := co.AppService.Update(request.Context(), id, req); err != nil {
 		response.Error(err)
+		return
 	}
 
 	response.JSON(http.StatusOK, dto.SuccessResponse)
@@ -76,6 +77,7 @@ func (co *Controller) Delete(response *goyave.Response, request *goyave.Request)
 
 	if err := co.AppService.Delete(request.Context(), id); err != nil {
 		response.Error(err)
+		return
 	}
 
 	response.JSON(http.StatusOK, dto.SuccessResponse)

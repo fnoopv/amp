@@ -42,7 +42,7 @@ func (ap *Application) Update(ctx context.Context, id string, app *model.Applica
 }
 
 func (ap *Application) Delete(ctx context.Context, id string) error {
-	db := ap.db.Delete(&model.Application{}, id)
+	db := ap.db.Delete(&model.Application{ID: id})
 
 	return errors.New(db.Error)
 }
