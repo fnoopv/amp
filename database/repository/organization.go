@@ -42,20 +42,23 @@ func (us *Organization) FindByID(ctx context.Context, id string) (*model.Organiz
 }
 
 // Delete 根据ID列表删除组织
-func (us *Organization) Delete(ctx context.Context, id string) error {
-	db := us.DB.Delete(&model.Organization{ID: id})
+func (us *Organization) Delete(ctx context.Context, ids []string) error {
+	db := us.DB.Select("Children").Where("id in ?", ids).Delete(&model.Organization{})
 
 	return errors.New(db.Error)
 }
 
 // Create 创建组织
 func (us *Organization) Create(ctx context.Context, user *model.Organization) error {
-	return us.DB.Create(user).Error
+	db := us.DB.Create(user)
+
+	return errors.New(db.Error)
 }
 
 // Update 更新组织信息
-func (us *Organization) Update(ctx context.Context, id string, organization *model.Organization) error {
-	return us.DB.Model(&model.Organization{}).Where("id = ?", id).Updates(organization).Error
+func (us *Organization) Update(ctx context.Context, organization *model.Organization) error {
+	db := us.DB.Model(&model.Organization{ID: organization.ID}).Select("Name", "ParentID", "kind", "Order", "Description").Updates(organization)
+	return errors.New(db.Error)
 }
 
 // Option 返回所有数据用于选择

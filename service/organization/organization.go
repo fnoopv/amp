@@ -17,8 +17,8 @@ import (
 type Repository interface {
 	Paginate(ctx context.Context, request *filter.Request) (*database.Paginator[*model.Organization], error)
 	Create(ctx context.Context, organization *model.Organization) error
-	Update(ctx context.Context, id string, organization *model.Organization) error
-	Delete(ctx context.Context, id string) error
+	Update(ctx context.Context, organization *model.Organization) error
+	Delete(ctx context.Context, ids []string) error
 	FindByID(ctx context.Context, id string) (*model.Organization, error)
 	Option(ctx context.Context) ([]*model.Organization, error)
 }
@@ -39,10 +39,6 @@ func NewService(repository Repository) *Service {
 func (se *Service) Paginate(ctx context.Context, request *filter.Request) (*database.PaginatorDTO[*dto.Organization], error) {
 	paginator, err := se.repository.Paginate(ctx, request)
 
-	dtoPaginator := typeutil.MustConvert[*database.PaginatorDTO[*dto.Organization]](paginator)
-
-	dtoPaginator.Records = BuildTree(dtoPaginator.Records)
-
 	return typeutil.MustConvert[*database.PaginatorDTO[*dto.Organization]](paginator), errors.New(err)
 }
 
@@ -62,17 +58,17 @@ func (se *Service) Create(ctx context.Context, organization *dto.OrganizationCre
 }
 
 // Update 更新组织信息
-func (se *Service) Update(ctx context.Context, id string, organization *dto.OrganizationUpdate) error {
+func (se *Service) Update(ctx context.Context, organization *dto.OrganizationUpdate) error {
 	modelOrg := typeutil.Copy(&model.Organization{}, organization)
 
-	err := se.repository.Update(ctx, id, modelOrg)
+	err := se.repository.Update(ctx, modelOrg)
 
 	return errors.New(err)
 }
 
 // Delete 删除组织
-func (se *Service) Delete(ctx context.Context, id string) error {
-	err := se.repository.Delete(ctx, id)
+func (se *Service) Delete(ctx context.Context, ids []string) error {
+	err := se.repository.Delete(ctx, ids)
 
 	return errors.New(err)
 }
@@ -91,30 +87,6 @@ func (se *Service) Option(ctx context.Context) ([]*dto.Organization, error) {
 	orgs, err := se.repository.Option(ctx)
 
 	return typeutil.MustConvert[[]*dto.Organization](orgs), errors.New(err)
-}
-
-// BuildTree 构建树
-func BuildTree(orgs []*dto.Organization) []*dto.Organization {
-	// 创建一个映射：ParentID -> []子节点
-	orgMap := make(map[string][]*dto.Organization)
-	for _, org := range orgs {
-		if org.ParentID != "" {
-			orgMap[org.ParentID] = append(orgMap[org.ParentID], org)
-		}
-	}
-	// 为每个节点填充 Children
-	for i := range orgs {
-		org := orgs[i]
-		org.Children = orgMap[org.ID]
-	}
-	// 提取顶级节点（ParentID 为空的节点）
-	var topOrgs []*dto.Organization
-	for _, org := range orgs {
-		if org.ParentID == "" {
-			topOrgs = append(topOrgs, org)
-		}
-	}
-	return topOrgs
 }
 
 // Name 返回服务名称,框架使用

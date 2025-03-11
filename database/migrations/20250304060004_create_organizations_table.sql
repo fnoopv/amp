@@ -5,6 +5,7 @@ CREATE TABLE "organizations" (
     "name" varchar(255) NOT NULL,
     "kind" varchar(255) NOT NULL,
     "order" integer DEFAULT null,
+    "description" text,
     "created_at" timestamp NOT NULL,
     "updated_at" timestamp NOT NULL,
     "deleted_at" timestamp DEFAULT null,

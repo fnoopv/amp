@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/dromara/carbon/v2"
+	"github.com/guregu/null/v6"
 	"gorm.io/gorm"
 )
 
@@ -12,7 +13,7 @@ type Application struct {
 	// Name 名称
 	Name string `json:"name" gorm:"column:name;not null"`
 	// OrganizationID 所属组织ID
-	OrganizationID string `json:"organization_id" gorm:"column:organization_id"`
+	OrganizationID null.String `json:"organization_id" gorm:"column:organization_id;default:null"`
 	// LaunchedAt 上线时间
 	LaunchedAt *carbon.Date `json:"launched_at" gorm:"column:launched_at;default:null"`
 	// Description 描述

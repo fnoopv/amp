@@ -15,8 +15,8 @@ import (
 type Service interface {
 	Paginate(ctx context.Context, request *filter.Request) (*database.PaginatorDTO[*dto.Organization], error)
 	Create(ctx context.Context, organization *dto.OrganizationCreate) error
-	Update(ctx context.Context, id string, organization *dto.OrganizationUpdate) error
-	Delete(ctx context.Context, id string) error
+	Update(ctx context.Context, organization *dto.OrganizationUpdate) error
+	Delete(ctx context.Context, ids []string) error
 	FindByID(ctx context.Context, id string) (*dto.Organization, error)
 	Option(ctx context.Context) ([]*dto.Organization, error)
 }
@@ -38,8 +38,8 @@ func (co *Controller) RegisterRoutes(router *goyave.Router) {
 	subRouter.Get("/options", co.Option)
 
 	subRouter.Get("/info/{id}", co.FindByID)
-	subRouter.Post("/update/{id}", co.Update).ValidateBody(UpdateRequest)
-	subRouter.Delete("/delete/{id}", co.Delete)
+	subRouter.Post("/update", co.Update).ValidateBody(UpdateRequest)
+	subRouter.Post("/delete", co.Delete).ValidateBody(DeleteRequest)
 }
 
 func (co *Controller) Index(response *goyave.Response, request *goyave.Request) {
@@ -68,10 +68,9 @@ func (co *Controller) Create(response *goyave.Response, request *goyave.Request)
 
 // Update 更新组织信息
 func (co *Controller) Update(response *goyave.Response, request *goyave.Request) {
-	id := request.RouteParams["id"]
-	org := typeutil.MustConvert[*dto.OrganizationUpdate](request.Data)
+	req := typeutil.MustConvert[*dto.OrganizationUpdate](request.Data)
 
-	err := co.organizationService.Update(request.Context(), id, org)
+	err := co.organizationService.Update(request.Context(), req)
 	if err != nil {
 		response.Error(err)
 	}
@@ -81,9 +80,9 @@ func (co *Controller) Update(response *goyave.Response, request *goyave.Request)
 
 // Delete 删除组织信息
 func (co *Controller) Delete(response *goyave.Response, request *goyave.Request) {
-	id := request.RouteParams["id"]
+	req := typeutil.MustConvert[*dto.OrganizationDelete](request.Data)
 
-	err := co.organizationService.Delete(request.Context(), id)
+	err := co.organizationService.Delete(request.Context(), req.IDs)
 	if err != nil {
 		response.Error(err)
 	}
