@@ -18,12 +18,8 @@ type Organization struct {
 	CreatedAt carbon.DateTime `json:"created_at"`
 	// UpdatedAt 更新时间
 	UpdatedAt carbon.DateTime `json:"updated_at"`
-}
 
-// OrganizationIndex 组织列表
-type OrganizationIndex struct {
-	Page     int `json:"page"`
-	PageSize int `json:"page_size"`
+	Children []*Organization `json:"children,omitempty,omitzero"`
 }
 
 // OrganizationCreate 新增组织架构

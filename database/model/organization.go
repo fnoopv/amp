@@ -10,7 +10,7 @@ type Organization struct {
 	// ID 唯一ID
 	ID string `json:"id" gorm:"column:id;primaryKey;not null"`
 	// ParentID 上级组织id, 为空时是顶级组织
-	ParentID string `json:"parent_id" gorm:"column:parent_id;default:null"`
+	ParentID string `json:"parent_id" gorm:"column:parent_id"`
 	// Name 组织名称
 	Name string `json:"name" gorm:"column:name;not null"`
 	// Kind 组织类型 company-公司,department-部门
@@ -22,6 +22,8 @@ type Organization struct {
 	// UpdatedAt 更新时间
 	UpdatedAt carbon.DateTime `json:"updated_at" gorm:"column:updated_at;autoUpdateTime;type:datetime"`
 	DeletedAt gorm.DeletedAt
+
+	Children []Organization `json:"children" gorm:"foreignKey:ParentID"`
 }
 
 // TableName 组织架构表表名

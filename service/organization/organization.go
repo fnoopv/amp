@@ -20,6 +20,7 @@ type Repository interface {
 	Update(ctx context.Context, id string, organization *model.Organization) error
 	Delete(ctx context.Context, id string) error
 	FindByID(ctx context.Context, id string) (*model.Organization, error)
+	Option(ctx context.Context) ([]*model.Organization, error)
 }
 
 // Service 组织服务
@@ -37,6 +38,10 @@ func NewService(repository Repository) *Service {
 // Paginate 获取组织列表
 func (se *Service) Paginate(ctx context.Context, request *filter.Request) (*database.PaginatorDTO[*dto.Organization], error) {
 	paginator, err := se.repository.Paginate(ctx, request)
+
+	dtoPaginator := typeutil.MustConvert[*database.PaginatorDTO[*dto.Organization]](paginator)
+
+	dtoPaginator.Records = BuildTree(dtoPaginator.Records)
 
 	return typeutil.MustConvert[*database.PaginatorDTO[*dto.Organization]](paginator), errors.New(err)
 }
@@ -80,6 +85,36 @@ func (se *Service) FindByID(ctx context.Context, id string) (*dto.Organization, 
 	}
 
 	return typeutil.MustConvert[*dto.Organization](org), nil
+}
+
+func (se *Service) Option(ctx context.Context) ([]*dto.Organization, error) {
+	orgs, err := se.repository.Option(ctx)
+
+	return typeutil.MustConvert[[]*dto.Organization](orgs), errors.New(err)
+}
+
+// BuildTree 构建树
+func BuildTree(orgs []*dto.Organization) []*dto.Organization {
+	// 创建一个映射：ParentID -> []子节点
+	orgMap := make(map[string][]*dto.Organization)
+	for _, org := range orgs {
+		if org.ParentID != "" {
+			orgMap[org.ParentID] = append(orgMap[org.ParentID], org)
+		}
+	}
+	// 为每个节点填充 Children
+	for i := range orgs {
+		org := orgs[i]
+		org.Children = orgMap[org.ID]
+	}
+	// 提取顶级节点（ParentID 为空的节点）
+	var topOrgs []*dto.Organization
+	for _, org := range orgs {
+		if org.ParentID == "" {
+			topOrgs = append(topOrgs, org)
+		}
+	}
+	return topOrgs
 }
 
 // Name 返回服务名称,框架使用

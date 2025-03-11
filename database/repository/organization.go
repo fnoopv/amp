@@ -27,7 +27,7 @@ func NewOrganization(db *gorm.DB) *Organization {
 func (us *Organization) Paginate(ctx context.Context, request *filter.Request) (*database.Paginator[*model.Organization], error) {
 	users := []*model.Organization{}
 
-	paginator, err := filter.Scope(session.DB(ctx, us.DB), request, &users)
+	paginator, err := filter.Scope(session.DB(ctx, us.DB).Where("parent_id IS NULL").Preload("Children"), request, &users)
 
 	return paginator, errors.New(err)
 }
@@ -43,7 +43,7 @@ func (us *Organization) FindByID(ctx context.Context, id string) (*model.Organiz
 
 // Delete 根据ID列表删除组织
 func (us *Organization) Delete(ctx context.Context, id string) error {
-	db := us.DB.Delete(&model.Organization{}, id)
+	db := us.DB.Delete(&model.Organization{ID: id})
 
 	return errors.New(db.Error)
 }
@@ -56,4 +56,13 @@ func (us *Organization) Create(ctx context.Context, user *model.Organization) er
 // Update 更新组织信息
 func (us *Organization) Update(ctx context.Context, id string, organization *model.Organization) error {
 	return us.DB.Model(&model.Organization{}).Where("id = ?", id).Updates(organization).Error
+}
+
+// Option 返回所有数据用于选择
+func (us *Organization) Option(ctx context.Context) ([]*model.Organization, error) {
+	orgs := []*model.Organization{}
+
+	db := us.DB.Where("parent_id IS NULL").Preload("Children").Find(&orgs)
+
+	return orgs, errors.New(db.Error)
 }

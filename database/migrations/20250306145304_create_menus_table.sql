@@ -1,7 +1,7 @@
 -- migrate:up
 CREATE TABLE menus (
     "id" char(36) NOT NULL,
-    "parent_id" char(36) NOT NULL,
+    "parent_id" char(36),
     "feature_id" char(36) NOT NULL,
     "method" char(7) NOT NULL,
     "icon" varchar(255) NOT NULL,

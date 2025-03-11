@@ -13,7 +13,6 @@ CREATE TABLE applications (
     CONSTRAINT fk_application_orgsnization
     FOREIGN KEY (organization_id)
     REFERENCES organizations (id)
-    ON UPDATE CASCADE
     ON DELETE SET NULL
 );
 CREATE INDEX applications_organization_id_idx ON applications (organization_id);

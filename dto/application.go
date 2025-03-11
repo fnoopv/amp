@@ -19,6 +19,8 @@ type Application struct {
 	CreatedAt carbon.DateTime `json:"created_at"`
 	// UpdatedAt 更新时间
 	UpdatedAt carbon.DateTime `json:"updated_at"`
+
+	Organization Organization `json:"organization,omitzero"`
 }
 
 type ApplicationCreate struct {

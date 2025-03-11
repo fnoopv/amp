@@ -24,7 +24,7 @@ func NewApplication(db *gorm.DB) *Application {
 func (ap *Application) Paginate(ctx context.Context, request *filter.Request) (*database.Paginator[*model.Application], error) {
 	apps := []*model.Application{}
 
-	paginator, err := filter.Scope(session.DB(ctx, ap.db), request, &apps)
+	paginator, err := filter.Scope(session.DB(ctx, ap.db).Preload("Organization"), request, &apps)
 
 	return paginator, errors.New(err)
 }

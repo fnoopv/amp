@@ -18,6 +18,7 @@ type Service interface {
 	Update(ctx context.Context, id string, organization *dto.OrganizationUpdate) error
 	Delete(ctx context.Context, id string) error
 	FindByID(ctx context.Context, id string) (*dto.Organization, error)
+	Option(ctx context.Context) ([]*dto.Organization, error)
 }
 
 type Controller struct {
@@ -34,11 +35,11 @@ func (co *Controller) RegisterRoutes(router *goyave.Router) {
 	subRouter := router.Subrouter("/organizations")
 	subRouter.Get("/", co.Index).ValidateQuery(filter.Validation)
 	subRouter.Post("/", co.Create).ValidateBody(CreateRequest)
+	subRouter.Get("/options", co.Option)
 
-	orgRouter := subRouter.Subrouter("/{id}")
-	orgRouter.Get("/", co.FindByID)
-	orgRouter.Patch("/", co.Update).ValidateBody(UpdateRequest)
-	orgRouter.Delete("/", co.Delete)
+	subRouter.Get("/info/{id}", co.FindByID)
+	subRouter.Post("/update/{id}", co.Update).ValidateBody(UpdateRequest)
+	subRouter.Delete("/delete/{id}", co.Delete)
 }
 
 func (co *Controller) Index(response *goyave.Response, request *goyave.Request) {
@@ -102,5 +103,18 @@ func (co *Controller) FindByID(response *goyave.Response, request *goyave.Reques
 	response.JSON(http.StatusOK, dto.CommonResponse{
 		Message: dto.SuccessMessage,
 		Data:    org,
+	})
+}
+
+func (co *Controller) Option(response *goyave.Response, request *goyave.Request) {
+	orgs, err := co.organizationService.Option(request.Context())
+	if err != nil {
+		response.Error(err)
+		return
+	}
+
+	response.JSON(http.StatusOK, dto.CommonResponse{
+		Message: dto.SuccessMessage,
+		Data:    orgs,
 	})
 }
