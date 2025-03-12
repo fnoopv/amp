@@ -12,6 +12,7 @@ import (
 	"github.com/fnoopv/amp/pkg/external/redis"
 	"github.com/fnoopv/amp/pkg/migrate"
 	"github.com/fnoopv/amp/service/application"
+	"github.com/fnoopv/amp/service/attachment"
 	"github.com/fnoopv/amp/service/organization"
 	"github.com/fnoopv/amp/service/user"
 
@@ -117,4 +118,8 @@ func registerServices(server *goyave.Server) {
 	appRepository := repository.NewApplication(server.DB())
 	appService := application.NewService(appRepository)
 	server.RegisterService(appService)
+
+	attachmentRepository := repository.NewAttachment(server.DB())
+	attachmentService := attachment.NewService(attachmentRepository)
+	server.RegisterService(attachmentService)
 }

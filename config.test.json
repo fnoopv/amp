@@ -14,7 +14,7 @@
     "readHeaderTimeout": 10,
     "idleTimeout": 20,
     "websocketCloseTimeout": 10,
-    "maxUploadSize": 10.0,
+    "maxUploadSize": 48.0,
     "proxy": {
       "protocol": "http",
       "host": "",
@@ -54,5 +54,8 @@
   "redis": {
     "host": "10.129.138.211",
     "port": 6379
+  },
+  "attachment": {
+    "directory": "attachments"
   }
 }

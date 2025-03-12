@@ -34,11 +34,11 @@ func (us *User) Paginate(ctx context.Context, request *filter.Request) (*databas
 
 // FindByID 根据ID获取用户
 func (us *User) FindByID(ctx context.Context, id string) (*model.User, error) {
-	var user *model.User
+	var user model.User
 
 	db := us.DB.Where("id", id).First(&user)
 
-	return user, errors.New(db.Error)
+	return &user, errors.New(db.Error)
 }
 
 // FindByUsername 根据用户名获取用户
