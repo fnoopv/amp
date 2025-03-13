@@ -13,6 +13,7 @@ import (
 	"github.com/fnoopv/amp/pkg/migrate"
 	"github.com/fnoopv/amp/service/application"
 	"github.com/fnoopv/amp/service/attachment"
+	"github.com/fnoopv/amp/service/evaluation"
 	"github.com/fnoopv/amp/service/filling"
 	"github.com/fnoopv/amp/service/organization"
 	"github.com/fnoopv/amp/service/user"
@@ -130,4 +131,8 @@ func registerServices(server *goyave.Server) {
 	fillingRepository := repository.NewFilling(server.DB())
 	fillingService := filling.NewService(fillingRepository)
 	server.RegisterService(fillingService)
+
+	evaluationRepository := repository.NewEvaluation(server.DB())
+	evaluationService := evaluation.NewService(evaluationRepository)
+	server.RegisterService(evaluationService)
 }

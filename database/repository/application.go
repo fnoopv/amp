@@ -21,7 +21,10 @@ func NewApplication(db *gorm.DB) *Application {
 	}
 }
 
-func (ap *Application) Paginate(ctx context.Context, request *filter.Request) (*database.Paginator[*model.Application], error) {
+func (ap *Application) Paginate(ctx context.Context, request *filter.Request) (
+	*database.Paginator[*model.Application],
+	error,
+) {
 	apps := []*model.Application{}
 
 	paginator, err := filter.Scope(session.DB(ctx, ap.db).Preload("Organization"), request, &apps)
@@ -30,19 +33,22 @@ func (ap *Application) Paginate(ctx context.Context, request *filter.Request) (*
 }
 
 func (ap *Application) Create(ctx context.Context, app *model.Application) error {
-	db := ap.db.Create(app)
+	db := ap.db.WithContext(ctx).Create(app)
 
 	return errors.New(db.Error)
 }
 
 func (ap *Application) Update(ctx context.Context, app *model.Application) error {
-	db := ap.db.Model(&model.Application{ID: app.ID}).Select("Name", "OrganizationID", "LaunchedAt", "Description").Updates(app)
+	db := ap.db.WithContext(ctx).
+		Model(&model.Application{ID: app.ID}).
+		Select("Name", "OrganizationID", "LaunchedAt", "Description").
+		Updates(app)
 
 	return errors.New(db.Error)
 }
 
 func (ap *Application) Delete(ctx context.Context, ids []string) error {
-	db := ap.db.Where("id in ?", ids).Delete(&model.Application{})
+	db := ap.db.WithContext(ctx).Where("id in ?", ids).Delete(&model.Application{})
 
 	return errors.New(db.Error)
 }

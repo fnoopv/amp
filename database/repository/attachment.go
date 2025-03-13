@@ -19,13 +19,16 @@ func NewAttachment(db *gorm.DB) *Attachment {
 }
 
 func (at *Attachment) Create(ctx context.Context, att *model.Attachment) error {
-	db := at.db.Create(att)
+	db := at.db.WithContext(ctx).Create(att)
 
 	return errors.New(db.Error)
 }
 
 func (at *Attachment) Update(ctx context.Context, att *model.Attachment) error {
-	db := at.db.Model(&model.Attachment{ID: att.ID}).Select("BusinessKind", "BusinessID").Updates(att)
+	db := at.db.WithContext(ctx).
+		Model(&model.Attachment{ID: att.ID}).
+		Select("BusinessKind", "BusinessID").
+		Updates(att)
 
 	return errors.New(db.Error)
 }

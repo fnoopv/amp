@@ -7,4 +7,5 @@ const (
 	Application  = "application"
 	Attachment   = "attachment"
 	Filling      = "filling"
+	Evaluation   = "evaluation"
 )

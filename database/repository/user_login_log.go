@@ -21,7 +21,10 @@ func NewUserLoginLog(db *gorm.DB) *UserLoginLog {
 	}
 }
 
-func (us *UserLoginLog) Paginate(ctx *context.Context, request *filter.Request) (*database.Paginator[*model.UserLoginLog], error) {
+func (us *UserLoginLog) Paginate(ctx *context.Context, request *filter.Request) (
+	*database.Paginator[*model.UserLoginLog],
+	error,
+) {
 	records := []*model.UserLoginLog{}
 
 	paginator, err := filter.Scope(session.DB(*ctx, us.db), request, &records)

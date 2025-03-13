@@ -20,15 +20,15 @@ func NewBusinessAttachment(db *gorm.DB) *BusinessAttachment {
 }
 
 // Create 新增附件业务关联
-func (ba *BusinessAttachment) Create(ctx context.Context, bt *model.BusinessAttachment) error {
-	db := session.DB(ctx, ba.db).Create(bt)
+func (bu *BusinessAttachment) Create(ctx context.Context, bt *model.BusinessAttachment) error {
+	db := session.DB(ctx, bu.db).Create(bt)
 
 	return errors.New(db.Error)
 }
 
 // Delete 删除附件业务关联
-func (ba *BusinessAttachment) Delete(ctx context.Context, businessType, businessID, attachmentType string) error {
-	db := session.DB(ctx, ba.db).
+func (bu *BusinessAttachment) Delete(ctx context.Context, businessType, businessID, attachmentType string) error {
+	db := session.DB(ctx, bu.db).
 		Where("business_type = ?", businessType).
 		Where("business_id = ?", businessID).
 		Where("attachment_type = ?", attachmentType).

@@ -29,6 +29,7 @@ type Filling struct {
 	UpdatedAt carbon.DateTime `json:"updated_at"`
 
 	Organization Organization `json:"organization,omitzero"`
+	Evaluations  []Evaluation `json:"evaluations,omitzero,omitempty"`
 }
 
 type FillingCreate struct {
