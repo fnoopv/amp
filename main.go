@@ -13,6 +13,7 @@ import (
 	"github.com/fnoopv/amp/pkg/migrate"
 	"github.com/fnoopv/amp/service/application"
 	"github.com/fnoopv/amp/service/attachment"
+	"github.com/fnoopv/amp/service/filling"
 	"github.com/fnoopv/amp/service/organization"
 	"github.com/fnoopv/amp/service/user"
 
@@ -107,6 +108,9 @@ func main() {
 func registerServices(server *goyave.Server) {
 	server.Logger.Info("Registering services")
 
+	// session := session.GORM(server.DB(), &sql.TxOptions{})
+	// businessAttachmentRepository := repository.NewBusinessAttachment(server.DB())
+
 	userRepository := repository.NewUser(server.DB())
 	userService := user.NewService(userRepository)
 	server.RegisterService(userService)
@@ -122,4 +126,8 @@ func registerServices(server *goyave.Server) {
 	attachmentRepository := repository.NewAttachment(server.DB())
 	attachmentService := attachment.NewService(attachmentRepository)
 	server.RegisterService(attachmentService)
+
+	fillingRepository := repository.NewFilling(server.DB())
+	fillingService := filling.NewService(fillingRepository)
+	server.RegisterService(fillingService)
 }

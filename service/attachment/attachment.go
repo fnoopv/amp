@@ -34,14 +34,6 @@ func (se *Service) Create(ctx context.Context, att *dto.AttachmentCreate) error 
 	return errors.New(err)
 }
 
-func (se *Service) Update(ctx context.Context, att *dto.AttachmentUpdate) error {
-	modelAtt := typeutil.MustConvert[*model.Attachment](att)
-
-	err := se.repository.Update(ctx, modelAtt)
-
-	return errors.New(err)
-}
-
 func (se *Service) FindByID(ctx context.Context, id string) (*dto.AttachmentInternal, error) {
 	att, err := se.repository.FindByID(ctx, id)
 

@@ -32,10 +32,6 @@ type AttachmentInternal struct {
 	UploaderID string `json:"uploader_id"`
 	// UploadAt 上传时间
 	UploadAt carbon.DateTime `json:"upload_at"`
-	// BusinessKind 业务类型
-	BusinessKind string `json:"business_kind"`
-	// BusinessID 业务ID
-	BusinessID string `json:"business_id"`
 	// SHA256Sum SHA256校验值
 	SHA256Sum string `json:"sha256_sum"`
 	// CreatedAt 创建时间
@@ -60,13 +56,4 @@ type AttachmentCreate struct {
 	UploadAt carbon.DateTime `json:"upload_at"`
 	// SHA256Sum SHA256校验值
 	SHA256Sum string `json:"sha256_sum"`
-}
-
-type AttachmentUpdate struct {
-	// ID 唯一ID
-	ID string `json:"id"`
-	// BusinessKind 业务类型
-	BusinessKind string `json:"business_kind"`
-	// BusinessID 业务ID
-	BusinessID string `json:"business_id"`
 }

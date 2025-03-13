@@ -10,7 +10,7 @@ CREATE TABLE applications (
     "deleted_at" timestamp DEFAULT NULL,
     PRIMARY KEY (id),
 
-    CONSTRAINT fk_application_orgsnization
+    CONSTRAINT fk_application_organization
     FOREIGN KEY (organization_id)
     REFERENCES organizations (id)
     ON DELETE SET NULL

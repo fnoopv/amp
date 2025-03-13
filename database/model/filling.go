@@ -3,6 +3,7 @@ package model
 import (
 	"github.com/dromara/carbon/v2"
 	"github.com/guregu/null/v6"
+	"gorm.io/gorm"
 )
 
 // Filling 备案台账
@@ -29,11 +30,13 @@ type Filling struct {
 	CreatedAt carbon.DateTime `json:"created_at" gorm:"column:created_at;autoCreateTime;type:datetime"`
 	// UpdatedAt 更新时间
 	UpdatedAt carbon.DateTime `json:"updated_at" gorm:"column:updated_at;autoUpdateTime;type:datetime"`
+	DeletedAt gorm.DeletedAt
 
 	Organization Organization `gorm:"foreignKey:OrganizationID"`
+	Evaluations  []Evaluation `gorm:"foreignKey:FillingID"`
 }
 
 // Network 备案台账表表名
 func (Filling) TableName() string {
-	return "networks"
+	return "fillings"
 }

@@ -2,7 +2,6 @@ package model
 
 import (
 	"github.com/dromara/carbon/v2"
-	"github.com/guregu/null/v6"
 )
 
 // Attachment 附件表
@@ -21,10 +20,6 @@ type Attachment struct {
 	UploaderID string `json:"uploader_id" gorm:"column:uploader_id;not null"`
 	// UploadAt 上传时间
 	UploadAt carbon.DateTime `json:"upload_at" gorm:"column:upload_at;not null"`
-	// BusinessKind 业务类型
-	BusinessKind null.String `json:"business_kind" gorm:"column:business_kind"`
-	// BusinessID 业务ID
-	BusinessID null.String `json:"business_id" gorm:"column:business_id"`
 	// SHA256Sum SHA256校验值
 	SHA256Sum string `json:"sha256_sum" gorm:"column:sha256_sum;not null"`
 	// CreatedAt 创建时间

@@ -33,7 +33,6 @@ func init() {
 
 type Service interface {
 	Create(ctx context.Context, att *dto.AttachmentCreate) error
-	Update(ctx context.Context, att *dto.AttachmentUpdate) error
 	FindByID(ctx context.Context, id string) (*dto.AttachmentInternal, error)
 }
 
