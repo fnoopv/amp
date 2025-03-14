@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"embed"
 	"fmt"
 	"net"
@@ -23,6 +24,7 @@ import (
 	_ "goyave.dev/goyave/v5/database/dialect/postgres"
 	"goyave.dev/goyave/v5/util/errors"
 	"goyave.dev/goyave/v5/util/fsutil"
+	"goyave.dev/goyave/v5/util/session"
 )
 
 //go:embed resources
@@ -109,8 +111,8 @@ func main() {
 func registerServices(server *goyave.Server) {
 	server.Logger.Info("Registering services")
 
-	// session := session.GORM(server.DB(), &sql.TxOptions{})
-	// businessAttachmentRepository := repository.NewBusinessAttachment(server.DB())
+	session := session.GORM(server.DB(), &sql.TxOptions{})
+	businessAttachmentRepository := repository.NewBusinessAttachment(server.DB())
 
 	userRepository := repository.NewUser(server.DB())
 	userService := user.NewService(userRepository)
@@ -133,6 +135,11 @@ func registerServices(server *goyave.Server) {
 	server.RegisterService(fillingService)
 
 	evaluationRepository := repository.NewEvaluation(server.DB())
-	evaluationService := evaluation.NewService(evaluationRepository)
+	evaluationService := evaluation.NewService(
+		session,
+		evaluationRepository,
+		businessAttachmentRepository,
+		attachmentRepository,
+	)
 	server.RegisterService(evaluationService)
 }

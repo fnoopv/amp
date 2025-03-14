@@ -11,6 +11,14 @@ type Evaluation struct {
 	CompletedAt carbon.Date `json:"completed_at"`
 	// SerialNumber 测评编号
 	SerialNumber string `json:"serial_number"`
+	// EvaluationAttachmentIDs 测评报告ID
+	EvaluationAttachmentIDs []string `json:"evaluation_attachment_ids"`
+	// EvaluationAttachments 测评报告
+	EvaluationAttachments []Attachment `json:"evaluation_attachments,omitempty"`
+	// RepairAttachmentIDs 整改报告ID
+	RepairAttachmentIDs []string `json:"repair_attachment_ids"`
+	// RepairAttachments 整改报告
+	RepairAttachments []Attachment `json:"repair_attachments,omitempty"`
 	// CreatedAt 创建时间
 	CreatedAt carbon.DateTime `json:"created_at"`
 	// UpdatedAt 更新时间
@@ -24,6 +32,10 @@ type EvaluationCreate struct {
 	CompletedAt carbon.Date `json:"completed_at"`
 	// SerialNumber 测评编号
 	SerialNumber string `json:"serial_number"`
+	// EvaluationAttachmentIDs 测评报告ID
+	EvaluationAttachmentIDs []string `json:"evaluation_attachment_ids"`
+	// RepairAttachmentIDs 整改报告ID
+	RepairAttachmentIDs []string `json:"repair_attachment_ids"`
 }
 
 type EvaluationUpdate struct {
@@ -35,6 +47,10 @@ type EvaluationUpdate struct {
 	CompletedAt carbon.Date `json:"completed_at"`
 	// SerialNumber 测评编号
 	SerialNumber string `json:"serial_number"`
+	// EvaluationAttachmentIDs 测评报告ID
+	EvaluationAttachmentIDs []string `json:"evaluation_attachment_ids"`
+	// RepairAttachmentIDs 整改报告ID
+	RepairAttachmentIDs []string `json:"repair_attachment_ids"`
 }
 
 type EvaluationDelete struct {

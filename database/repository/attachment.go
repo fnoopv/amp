@@ -39,3 +39,10 @@ func (at *Attachment) FindByID(ctx context.Context, id string) (*model.Attachmen
 
 	return &att, errors.New(db.Error)
 }
+
+func (at *Attachment) FindByIDs(ctx context.Context, ids []string) ([]*model.Attachment, error) {
+	atts := []*model.Attachment{}
+	db := at.db.WithContext(ctx).Model(&model.Attachment{}).Where("id in ?", ids).Find(&atts)
+
+	return atts, errors.New(db.Error)
+}

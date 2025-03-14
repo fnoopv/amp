@@ -20,19 +20,40 @@ func NewBusinessAttachment(db *gorm.DB) *BusinessAttachment {
 }
 
 // Create 新增附件业务关联
-func (bu *BusinessAttachment) Create(ctx context.Context, bt *model.BusinessAttachment) error {
-	db := session.DB(ctx, bu.db).Create(bt)
+func (bu *BusinessAttachment) Create(ctx context.Context, bas []*model.BusinessAttachment) error {
+	db := session.DB(ctx, bu.db).Create(bas)
 
 	return errors.New(db.Error)
 }
 
 // Delete 删除附件业务关联
-func (bu *BusinessAttachment) Delete(ctx context.Context, businessType, businessID, attachmentType string) error {
+func (bu *BusinessAttachment) Delete(
+	ctx context.Context,
+	businessType, businessID string,
+	attachmentTypes []string,
+) error {
 	db := session.DB(ctx, bu.db).
 		Where("business_type = ?", businessType).
 		Where("business_id = ?", businessID).
-		Where("attachment_type = ?", attachmentType).
+		Where("attachment_type in ?", attachmentTypes).
 		Delete(&model.BusinessAttachment{})
 
 	return errors.New(db.Error)
+}
+
+// FindAttachmentIDs 查找业务关联的附件ID
+func (bu *BusinessAttachment) FindAttachmentIDs(
+	ctx context.Context,
+	businessType, businessID, attachmentType string,
+) ([]string, error) {
+	var ids []string
+
+	db := bu.db.WithContext(ctx).
+		Model(&model.BusinessAttachment{}).
+		Where("business_type = ?", businessType).
+		Where("business_id = ?", businessID).
+		Where("attachment_type = ?", attachmentType).
+		Pluck("id", &ids)
+
+	return ids, errors.New(db.Error)
 }

@@ -12,6 +12,10 @@ func CreateRequest(_ *goyave.Request) v.RuleSet {
 		{Path: "filling_id", Rules: v.List{v.Nullable(), v.String()}},
 		{Path: "completed_at", Rules: v.List{v.Required(), v.String()}},
 		{Path: "serial_number", Rules: v.List{v.Required(), v.String()}},
+		{Path: "evaluation_attachment_ids", Rules: v.List{v.Required(), v.Array()}},
+		{Path: "evaluation_attachment_ids[]", Rules: v.List{v.Required(), v.UUID()}},
+		{Path: "repair_attachment_ids", Rules: v.List{v.Array()}},
+		{Path: "repair_attachment_ids[]", Rules: v.List{v.UUID()}},
 	}
 }
 
