@@ -1,8 +1,6 @@
 package dto
 
 import (
-	"time"
-
 	"github.com/dromara/carbon/v2"
 )
 
@@ -29,7 +27,7 @@ type User struct {
 	// IsMFAActive MFA是否已经绑定
 	IsMFAActive bool `json:"is_mfa_active"`
 	// PasswordUpdatedAt 密码最后修改时间
-	PasswordUpdatedAt *time.Time `json:"password_updated_at,omitempty"`
+	PasswordUpdatedAt *carbon.DateTime `json:"password_updated_at,omitempty"`
 	// CreatedAt 创建时间
 	CreatedAt carbon.DateTime `json:"created_at"`
 	// UpdatedAt 更新时间

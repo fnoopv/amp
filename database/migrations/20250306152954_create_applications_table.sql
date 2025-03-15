@@ -16,6 +16,7 @@ CREATE TABLE applications (
     ON DELETE SET NULL
 );
 CREATE INDEX applications_organization_id_idx ON applications (organization_id);
+CREATE INDEX "applications_deleted_at_idx" ON "applications" ("deleted_at");
 
 -- migrate:down
 DROP TABLE IF EXISTS applications;

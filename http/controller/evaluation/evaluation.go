@@ -6,14 +6,12 @@ import (
 
 	"github.com/fnoopv/amp/dto"
 	"github.com/fnoopv/amp/service"
-	"goyave.dev/filter"
 	"goyave.dev/goyave/v5"
-	"goyave.dev/goyave/v5/database"
 	"goyave.dev/goyave/v5/util/typeutil"
 )
 
 type Service interface {
-	Paginate(ctx context.Context, request *filter.Request) (*database.PaginatorDTO[*dto.Evaluation], error)
+	FindByFillingID(ctx context.Context, fillingID string) ([]*dto.Evaluation, error)
 	Create(ctx context.Context, evaluation *dto.EvaluationCreate) error
 	Update(ctx context.Context, evaluation *dto.EvaluationUpdate) error
 	Delete(ctx context.Context, ids []string) error
@@ -31,21 +29,29 @@ func (co *Controller) Init(server *goyave.Server) {
 
 func (co *Controller) RegisterRoutes(router *goyave.Router) {
 	subRouter := router.Subrouter("/evaluations")
-	subRouter.Get("/", co.Index).ValidateQuery(filter.Validation)
 	subRouter.Post("/", co.Create).ValidateBody(CreateRequest)
+	subRouter.Get("/", co.Index).ValidateQuery(FindRequest)
 	subRouter.Post("/update", co.Update).ValidateBody(UpdateRequest)
 	subRouter.Post("/delete", co.Delete).ValidateBody(DeleteRequest)
 }
 
 func (co *Controller) Index(response *goyave.Response, request *goyave.Request) {
-	paginator, err := co.service.Paginate(request.Context(), filter.NewRequest(request.Query))
+	req, err := typeutil.Convert[*dto.EvaluationFind](request.Query)
+	if err != nil {
+		co.Logger().Info("invalid filling_id")
+		response.JSON(http.StatusBadRequest, dto.CommonResponse{
+			Message: request.Lang.Get("param.invalid"),
+		})
+		return
+	}
+	evaluations, err := co.service.FindByFillingID(request.Context(), req.FillingID)
 	if response.WriteDBError(err) {
 		return
 	}
 
 	response.JSON(http.StatusOK, dto.CommonResponse{
 		Message: dto.SuccessMessage,
-		Data:    paginator,
+		Data:    evaluations,
 	})
 }
 

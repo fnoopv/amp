@@ -9,6 +9,7 @@ CREATE TABLE roles (
     "deleted_at" timestamp DEFAULT NULL,
     PRIMARY KEY (id)
 );
+CREATE INDEX "roles_deleted_at_idx" ON "roles" ("deleted_at");
 
 -- migrate:down
 DROP TABLE IF EXISTS roles;

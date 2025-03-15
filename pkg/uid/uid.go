@@ -14,3 +14,8 @@ func Generate() (string, error) {
 
 	return id.String(), nil
 }
+
+// Validate 验证给定字符串是否为有效UUID
+func Validate(uid string) bool {
+	return uuid.Validate(uid) == nil
+}

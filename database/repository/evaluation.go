@@ -5,8 +5,6 @@ import (
 
 	"github.com/fnoopv/amp/database/model"
 	"gorm.io/gorm"
-	"goyave.dev/filter"
-	"goyave.dev/goyave/v5/database"
 	"goyave.dev/goyave/v5/util/errors"
 	"goyave.dev/goyave/v5/util/session"
 )
@@ -22,16 +20,16 @@ func NewEvaluation(db *gorm.DB) *Evaluation {
 	}
 }
 
-// Paginate 返回分页器
-func (ev *Evaluation) Paginate(ctx context.Context, request *filter.Request) (
-	*database.Paginator[*model.Evaluation],
+// FindByFillingID 根据备案ID查找搜索测评记录
+func (ev *Evaluation) FindByFillingID(ctx context.Context, fillingID string) (
+	[]*model.Evaluation,
 	error,
 ) {
 	evaluations := []*model.Evaluation{}
 
-	paginator, err := filter.Scope(session.DB(ctx, ev.db), request, &evaluations)
+	db := session.DB(ctx, ev.db).Where("filling_id = ?", fillingID).Find(&evaluations)
 
-	return paginator, errors.New(err)
+	return evaluations, errors.New(db.Error)
 }
 
 // Create 创建

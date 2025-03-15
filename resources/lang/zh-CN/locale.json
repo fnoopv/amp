@@ -1,5 +1,6 @@
 {
   "auth.no-credentials-provided": "未登录",
   "auth.invalid-credentials": "认证失败",
-  "parse.json-invalid-body": "内容解析失败"
+  "parse.json-invalid-body": "参数无效",
+  "param.invalid": "参数错误"
 }

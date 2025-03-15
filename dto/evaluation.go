@@ -25,6 +25,10 @@ type Evaluation struct {
 	UpdatedAt carbon.DateTime `json:"updated_at"`
 }
 
+type EvaluationFind struct {
+	FillingID string `json:"filling_id"`
+}
+
 type EvaluationCreate struct {
 	// FillingID 所属的备案ID
 	FillingID string `json:"filling_id"`

@@ -9,8 +9,6 @@ import (
 	"github.com/fnoopv/amp/pkg/uid"
 	"github.com/fnoopv/amp/service"
 	"github.com/samber/lo"
-	"goyave.dev/filter"
-	"goyave.dev/goyave/v5/database"
 	"goyave.dev/goyave/v5/util/errors"
 	"goyave.dev/goyave/v5/util/session"
 	"goyave.dev/goyave/v5/util/typeutil"
@@ -23,7 +21,7 @@ const (
 )
 
 type evaluationRepository interface {
-	Paginate(ctx context.Context, request *filter.Request) (*database.Paginator[*model.Evaluation], error)
+	FindByFillingID(ctx context.Context, fillingID string) ([]*model.Evaluation, error)
 	Create(ctx context.Context, evaluation *model.Evaluation) error
 	Update(ctx context.Context, evaluation *model.Evaluation) error
 	Delete(ctx context.Context, ids []string) error
@@ -60,26 +58,23 @@ func NewService(
 	}
 }
 
-func (se *Service) Paginate(ctx context.Context, request *filter.Request) (
-	*database.PaginatorDTO[*dto.Evaluation],
-	error,
-) {
-	var evaluations *database.PaginatorDTO[*dto.Evaluation]
+func (se *Service) FindByFillingID(ctx context.Context, fillingID string) ([]*dto.Evaluation, error) {
+	var evaluations []*dto.Evaluation
 
 	err := se.session.Transaction(ctx, func(ctx context.Context) error {
 		var err error
 
-		modelEvaluations, err := se.evaluationRepository.Paginate(ctx, request)
+		modelEvaluations, err := se.evaluationRepository.FindByFillingID(ctx, fillingID)
 		if err != nil {
 			return errors.New(err)
 		}
 
-		evaluations, err = typeutil.Convert[*database.PaginatorDTO[*dto.Evaluation]](modelEvaluations)
+		evaluations, err = typeutil.Convert[[]*dto.Evaluation](&modelEvaluations)
 		if err != nil {
 			return errors.New(err)
 		}
 
-		for _, evaluation := range evaluations.Records {
+		for _, evaluation := range evaluations {
 			ids, err := se.businessAttachmentRepository.FindAttachmentIDs(
 				ctx,
 				businessType,
@@ -139,10 +134,50 @@ func (se *Service) Create(ctx context.Context, evaluation *dto.EvaluationCreate)
 	if err != nil {
 		return errors.New(err)
 	}
-
 	modelEvaluation.ID = id
 
-	err = se.evaluationRepository.Create(ctx, modelEvaluation)
+	err = se.session.Transaction(ctx, func(ctx context.Context) error {
+		err := se.evaluationRepository.Create(ctx, modelEvaluation)
+		if err != nil {
+			return errors.New(err)
+		}
+
+		// 检查附件是否存在
+		attIDs := lo.Uniq(append(evaluation.EvaluationAttachmentIDs, evaluation.RepairAttachmentIDs...))
+		atts, err := se.attachmentRepository.FindByIDs(ctx, attIDs)
+		if err != nil {
+			return errors.New(err)
+		}
+		if len(atts) != len(attIDs) {
+			var existsIDs []string
+			for _, v := range atts {
+				existsIDs = append(existsIDs, v.ID)
+			}
+			withoutIDs := lo.Without(attIDs, existsIDs...)
+			return errors.New(fmt.Errorf("some attachment not exists,id: %v", withoutIDs))
+		}
+
+		// 插入关联表记录
+		bas := []*model.BusinessAttachment{}
+		for _, v := range evaluation.EvaluationAttachmentIDs {
+			bas = append(bas, &model.BusinessAttachment{
+				BusinessType:   businessType,
+				BusinessID:     modelEvaluation.ID,
+				AttachmentType: attachmentTypeEvaluation,
+				AttachmentID:   v,
+			})
+		}
+		for _, v := range evaluation.RepairAttachmentIDs {
+			bas = append(bas, &model.BusinessAttachment{
+				BusinessType:   businessType,
+				BusinessID:     modelEvaluation.ID,
+				AttachmentType: attachmentTypeRapire,
+				AttachmentID:   v,
+			})
+		}
+		err = se.businessAttachmentRepository.Create(ctx, bas)
+		return errors.New(err)
+	})
 
 	return errors.New(err)
 }

@@ -20,6 +20,7 @@ CREATE UNIQUE INDEX "users_username_deleted_at_uni"
 ON "users" ("username", "deleted_at");
 CREATE INDEX "users_status_idx" ON "users" ("status");
 CREATE INDEX "users_created_at_idx" ON "users" ("created_at");
+CREATE INDEX "users_deleted_at_idx" ON "users" ("deleted_at");
 
 -- migrate:down
 DROP TABLE IF EXISTS users;

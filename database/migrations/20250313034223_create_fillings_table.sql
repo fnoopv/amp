@@ -19,6 +19,7 @@ CREATE TABLE fillings (
     REFERENCES organizations (id)
     ON DELETE SET NULL
 );
+CREATE INDEX "fillings_deleted_at_idx" ON "fillings" ("deleted_at");
 
 -- migrate:down
 DROP TABLE IF EXISTS fillings;

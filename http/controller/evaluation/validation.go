@@ -5,6 +5,14 @@ import (
 	v "goyave.dev/goyave/v5/validation"
 )
 
+// FindRequest 列表
+func FindRequest(request *goyave.Request) v.RuleSet {
+	return v.RuleSet{
+		{Path: v.CurrentElement, Rules: v.List{v.Required(), v.Object()}},
+		{Path: "filling_id", Rules: v.List{v.Required(), v.UUID()}},
+	}
+}
+
 // CreateRequest 创建
 func CreateRequest(_ *goyave.Request) v.RuleSet {
 	return v.RuleSet{
