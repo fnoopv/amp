@@ -2,38 +2,108 @@ package filling
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/fnoopv/amp/database/model"
 	"github.com/fnoopv/amp/dto"
 	"github.com/fnoopv/amp/pkg/uid"
 	"github.com/fnoopv/amp/service"
+	"github.com/samber/lo"
 	"goyave.dev/filter"
 	"goyave.dev/goyave/v5/database"
 	"goyave.dev/goyave/v5/util/errors"
+	"goyave.dev/goyave/v5/util/session"
 	"goyave.dev/goyave/v5/util/typeutil"
 )
 
-type Repository interface {
+const (
+	businessType   = "filling"
+	attachmentType = "proof"
+)
+
+type fillingRepository interface {
 	Paginate(ctx context.Context, request *filter.Request) (*database.Paginator[*model.Filling], error)
 	Create(ctx context.Context, filling *model.Filling) error
 	Update(ctx context.Context, filling *model.Filling) error
 	Delete(ctx context.Context, ids []string) error
 }
 
-type Service struct {
-	repository Repository
+type businessAttachmentRepository interface {
+	Create(ctx context.Context, bas []*model.BusinessAttachment) error
+	Delete(ctx context.Context, businessType, businessID string, attachmentType []string) error
+	FindAttachmentIDs(ctx context.Context, businessType, businessID string, attachmentType []string) ([]string, error)
 }
 
-func NewService(repository Repository) *Service {
+type attachmentRepository interface {
+	FindByIDs(ctx context.Context, ids []string) ([]*model.Attachment, error)
+}
+
+type Service struct {
+	session                      session.Session
+	fillingRepository            fillingRepository
+	businessAttachmentRepository businessAttachmentRepository
+	attachmentRepository         attachmentRepository
+}
+
+func NewService(
+	session session.Session,
+	fillingRepository fillingRepository,
+	businessAttachmentRepository businessAttachmentRepository,
+	attachmentRepository attachmentRepository,
+) *Service {
 	return &Service{
-		repository: repository,
+		session:                      session,
+		fillingRepository:            fillingRepository,
+		businessAttachmentRepository: businessAttachmentRepository,
+		attachmentRepository:         attachmentRepository,
 	}
 }
 
-func (se *Service) Paginate(ctx context.Context, request *filter.Request) (*database.PaginatorDTO[*dto.Filling], error) {
-	fillings, err := se.repository.Paginate(ctx, request)
+func (se *Service) Paginate(ctx context.Context, request *filter.Request) (
+	*database.PaginatorDTO[*dto.Filling],
+	error,
+) {
+	var fillings *database.PaginatorDTO[*dto.Filling]
+	err := se.session.Transaction(ctx, func(ctx context.Context) error {
+		var err error
+		modelFillings, err := se.fillingRepository.Paginate(ctx, request)
+		if err != nil {
+			return errors.New(err)
+		}
 
-	return typeutil.MustConvert[*database.PaginatorDTO[*dto.Filling]](fillings), errors.New(err)
+		fillings, err = typeutil.Convert[*database.PaginatorDTO[*dto.Filling]](modelFillings)
+		if err != nil {
+			return errors.New(err)
+		}
+
+		for _, filling := range fillings.Records {
+			ids, err := se.businessAttachmentRepository.FindAttachmentIDs(
+				ctx,
+				businessType,
+				filling.ID,
+				[]string{attachmentType},
+			)
+			if err != nil {
+				return errors.New(err)
+			}
+			filling.ProofAttachmentIDs = ids
+
+			modelAttachments, err := se.attachmentRepository.FindByIDs(ctx, ids)
+			if err != nil {
+				return errors.New(err)
+			}
+			attachments, err := typeutil.Convert[*[]dto.Attachment](&modelAttachments)
+			if err != nil {
+				return errors.New(err)
+			}
+
+			filling.ProofAttachments = *attachments
+		}
+
+		return err
+	})
+
+	return fillings, errors.New(err)
 }
 
 func (se *Service) Create(ctx context.Context, filling *dto.FillingCreate) error {
@@ -43,10 +113,47 @@ func (se *Service) Create(ctx context.Context, filling *dto.FillingCreate) error
 	if err != nil {
 		return errors.New(err)
 	}
-
 	modelFilling.ID = id
 
-	err = se.repository.Create(ctx, modelFilling)
+	err = se.session.Transaction(ctx, func(ctx context.Context) error {
+		err := se.fillingRepository.Create(ctx, modelFilling)
+		if err != nil {
+			return errors.New(err)
+		}
+
+		if len(filling.ProofAttachmentIDs) > 0 {
+			// 检查附件是否存在
+			atts, err := se.attachmentRepository.FindByIDs(ctx, filling.ProofAttachmentIDs)
+			if err != nil {
+				return errors.New(err)
+			}
+			if len(atts) != len(filling.ProofAttachmentIDs) {
+				var existsIDs []string
+				for _, v := range atts {
+					existsIDs = append(existsIDs, v.ID)
+				}
+				withoutIDs := lo.Without(filling.ProofAttachmentIDs, existsIDs...)
+				return errors.New(fmt.Errorf("some attachment not exists,id: %v", withoutIDs))
+			}
+
+			// 设置附件关联
+			var bas []*model.BusinessAttachment
+			for _, ba := range filling.ProofAttachmentIDs {
+				bas = append(bas, &model.BusinessAttachment{
+					BusinessType:   businessType,
+					BusinessID:     id,
+					AttachmentType: attachmentType,
+					AttachmentID:   ba,
+				})
+			}
+			err = se.businessAttachmentRepository.Create(ctx, bas)
+			if err != nil {
+				return errors.New(err)
+			}
+		}
+
+		return nil
+	})
 
 	return errors.New(err)
 }
@@ -54,13 +161,69 @@ func (se *Service) Create(ctx context.Context, filling *dto.FillingCreate) error
 func (se *Service) Update(ctx context.Context, filling *dto.FillingUpdate) error {
 	modelFilling := typeutil.Copy(&model.Filling{}, filling)
 
-	err := se.repository.Update(ctx, modelFilling)
+	err := se.session.Transaction(ctx, func(ctx context.Context) error {
+		err := se.fillingRepository.Update(ctx, modelFilling)
+		if err != nil {
+			return errors.New(err)
+		}
+
+		err = se.businessAttachmentRepository.Delete(ctx, businessType, filling.ID, []string{attachmentType})
+		if err != nil {
+			return errors.New(err)
+		}
+
+		if len(filling.ProofAttachmentIDs) > 0 {
+			// 检查附件是否存在
+			atts, err := se.attachmentRepository.FindByIDs(ctx, filling.ProofAttachmentIDs)
+			if err != nil {
+				return errors.New(err)
+			}
+			if len(atts) != len(filling.ProofAttachmentIDs) {
+				var existsIDs []string
+				for _, v := range atts {
+					existsIDs = append(existsIDs, v.ID)
+				}
+				withoutIDs := lo.Without(filling.ProofAttachmentIDs, existsIDs...)
+				return errors.New(fmt.Errorf("some attachment not exists,id: %v", withoutIDs))
+			}
+
+			// 设置附件关联
+			var bas []*model.BusinessAttachment
+			for _, ba := range filling.ProofAttachmentIDs {
+				bas = append(bas, &model.BusinessAttachment{
+					BusinessType:   businessType,
+					BusinessID:     filling.ID,
+					AttachmentType: attachmentType,
+					AttachmentID:   ba,
+				})
+			}
+			err = se.businessAttachmentRepository.Create(ctx, bas)
+			if err != nil {
+				return errors.New(err)
+			}
+		}
+
+		return nil
+	})
 
 	return errors.New(err)
 }
 
 func (se *Service) Delete(ctx context.Context, ids []string) error {
-	err := se.repository.Delete(ctx, ids)
+	err := se.session.Transaction(ctx, func(ctx context.Context) error {
+		err := se.fillingRepository.Delete(ctx, ids)
+		if err != nil {
+			return errors.New(err)
+		}
+
+		for _, id := range ids {
+			err = se.businessAttachmentRepository.Delete(ctx, businessType, id, []string{attachmentType})
+			if err != nil {
+				return errors.New(err)
+			}
+		}
+		return errors.New(err)
+	})
 
 	return errors.New(err)
 }

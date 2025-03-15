@@ -114,6 +114,10 @@ func registerServices(server *goyave.Server) {
 	session := session.GORM(server.DB(), &sql.TxOptions{})
 	businessAttachmentRepository := repository.NewBusinessAttachment(server.DB())
 
+	attachmentRepository := repository.NewAttachment(server.DB())
+	attachmentService := attachment.NewService(attachmentRepository)
+	server.RegisterService(attachmentService)
+
 	userRepository := repository.NewUser(server.DB())
 	userService := user.NewService(userRepository)
 	server.RegisterService(userService)
@@ -126,12 +130,13 @@ func registerServices(server *goyave.Server) {
 	appService := application.NewService(appRepository)
 	server.RegisterService(appService)
 
-	attachmentRepository := repository.NewAttachment(server.DB())
-	attachmentService := attachment.NewService(attachmentRepository)
-	server.RegisterService(attachmentService)
-
 	fillingRepository := repository.NewFilling(server.DB())
-	fillingService := filling.NewService(fillingRepository)
+	fillingService := filling.NewService(
+		session,
+		fillingRepository,
+		businessAttachmentRepository,
+		attachmentRepository,
+	)
 	server.RegisterService(fillingService)
 
 	evaluationRepository := repository.NewEvaluation(server.DB())

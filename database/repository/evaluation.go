@@ -36,13 +36,13 @@ func (ev *Evaluation) Paginate(ctx context.Context, request *filter.Request) (
 
 // Create 创建
 func (ev *Evaluation) Create(ctx context.Context, evaluation *model.Evaluation) error {
-	db := ev.db.WithContext(ctx).Create(evaluation)
+	db := session.DB(ctx, ev.db).Create(evaluation)
 	return errors.New(db.Error)
 }
 
 // Update 更新
 func (ev *Evaluation) Update(ctx context.Context, evaluation *model.Evaluation) error {
-	db := ev.db.WithContext(ctx).
+	db := session.DB(ctx, ev.db).
 		Model(&model.Evaluation{ID: evaluation.ID}).
 		Select("FillingID", "CompletedAt", "SerialNumber").
 		Updates(evaluation)
@@ -52,7 +52,7 @@ func (ev *Evaluation) Update(ctx context.Context, evaluation *model.Evaluation) 
 
 // Delete 删除
 func (ev *Evaluation) Delete(ctx context.Context, ids []string) error {
-	db := ev.db.WithContext(ctx).Where("id in ?", ids).Delete(&model.Evaluation{})
+	db := session.DB(ctx, ev.db).Where("id in ?", ids).Delete(&model.Evaluation{})
 
 	return errors.New(db.Error)
 }

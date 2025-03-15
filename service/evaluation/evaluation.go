@@ -17,9 +17,9 @@ import (
 )
 
 const (
-	BusinessType         = "evaluation"
-	EvaluationAttachment = "evaluation"
-	RepairAttachment     = "rapair"
+	businessType             = "evaluation"
+	attachmentTypeEvaluation = "evaluation"
+	attachmentTypeRapire     = "rapair"
 )
 
 type evaluationRepository interface {
@@ -32,6 +32,7 @@ type evaluationRepository interface {
 type businessAttachmentRepository interface {
 	Create(ctx context.Context, bas []*model.BusinessAttachment) error
 	Delete(ctx context.Context, businessType, businessID string, attachmentType []string) error
+	FindAttachmentIDs(ctx context.Context, businessType, businessID string, attachmentType []string) ([]string, error)
 }
 
 type attachmentRepository interface {
@@ -63,9 +64,72 @@ func (se *Service) Paginate(ctx context.Context, request *filter.Request) (
 	*database.PaginatorDTO[*dto.Evaluation],
 	error,
 ) {
-	evaluations, err := se.evaluationRepository.Paginate(ctx, request)
+	var evaluations *database.PaginatorDTO[*dto.Evaluation]
 
-	return typeutil.MustConvert[*database.PaginatorDTO[*dto.Evaluation]](evaluations), errors.New(err)
+	err := se.session.Transaction(ctx, func(ctx context.Context) error {
+		var err error
+
+		modelEvaluations, err := se.evaluationRepository.Paginate(ctx, request)
+		if err != nil {
+			return errors.New(err)
+		}
+
+		evaluations, err = typeutil.Convert[*database.PaginatorDTO[*dto.Evaluation]](modelEvaluations)
+		if err != nil {
+			return errors.New(err)
+		}
+
+		for _, evaluation := range evaluations.Records {
+			ids, err := se.businessAttachmentRepository.FindAttachmentIDs(
+				ctx,
+				businessType,
+				evaluation.ID,
+				[]string{attachmentTypeEvaluation},
+			)
+			if err != nil {
+				return errors.New(err)
+			}
+			evaluation.EvaluationAttachmentIDs = ids
+			if len(ids) > 0 {
+				modelAttachments, err := se.attachmentRepository.FindByIDs(ctx, ids)
+				if err != nil {
+					return errors.New(err)
+				}
+				attachments, err := typeutil.Convert[[]*dto.Attachment](&modelAttachments)
+				if err != nil {
+					return errors.New(err)
+				}
+
+				evaluation.EvaluationAttachments = attachments
+			}
+			rapireIDs, err := se.businessAttachmentRepository.FindAttachmentIDs(
+				ctx,
+				businessType,
+				evaluation.ID,
+				[]string{attachmentTypeRapire},
+			)
+			if err != nil {
+				return errors.New(err)
+			}
+			evaluation.RepairAttachmentIDs = rapireIDs
+			if len(ids) > 0 {
+				modelAttachments, err := se.attachmentRepository.FindByIDs(ctx, rapireIDs)
+				if err != nil {
+					return errors.New(err)
+				}
+				attachments, err := typeutil.Convert[[]*dto.Attachment](&modelAttachments)
+				if err != nil {
+					return errors.New(err)
+				}
+
+				evaluation.RepairAttachments = attachments
+			}
+		}
+
+		return err
+	})
+
+	return evaluations, errors.New(err)
 }
 
 func (se *Service) Create(ctx context.Context, evaluation *dto.EvaluationCreate) error {
@@ -113,9 +177,9 @@ func (se *Service) Update(ctx context.Context, evaluation *dto.EvaluationUpdate)
 		// 删除关联表记录
 		err = se.businessAttachmentRepository.Delete(
 			ctx,
-			BusinessType,
+			businessType,
 			modelEvaluation.ID,
-			[]string{EvaluationAttachment, RepairAttachment},
+			[]string{attachmentTypeEvaluation, attachmentTypeRapire},
 		)
 		if err != nil {
 			return errors.New(err)
@@ -125,22 +189,21 @@ func (se *Service) Update(ctx context.Context, evaluation *dto.EvaluationUpdate)
 		bas := []*model.BusinessAttachment{}
 		for _, v := range evaluation.EvaluationAttachmentIDs {
 			bas = append(bas, &model.BusinessAttachment{
-				BusinessType:   BusinessType,
+				BusinessType:   businessType,
 				BusinessID:     modelEvaluation.ID,
-				AttachmentType: EvaluationAttachment,
+				AttachmentType: attachmentTypeEvaluation,
 				AttachmentID:   v,
 			})
 		}
 		for _, v := range evaluation.RepairAttachmentIDs {
 			bas = append(bas, &model.BusinessAttachment{
-				BusinessType:   BusinessType,
+				BusinessType:   businessType,
 				BusinessID:     modelEvaluation.ID,
-				AttachmentType: RepairAttachment,
+				AttachmentType: attachmentTypeRapire,
 				AttachmentID:   v,
 			})
 		}
 		err = se.businessAttachmentRepository.Create(ctx, bas)
-
 		return errors.New(err)
 	})
 
@@ -148,7 +211,25 @@ func (se *Service) Update(ctx context.Context, evaluation *dto.EvaluationUpdate)
 }
 
 func (se *Service) Delete(ctx context.Context, ids []string) error {
-	err := se.evaluationRepository.Delete(ctx, ids)
+	err := se.session.Transaction(ctx, func(ctx context.Context) error {
+		err := se.evaluationRepository.Delete(ctx, ids)
+		if err != nil {
+			return errors.New(err)
+		}
+		for _, id := range ids {
+			err = se.businessAttachmentRepository.Delete(
+				ctx,
+				businessType,
+				id,
+				[]string{attachmentTypeEvaluation, attachmentTypeRapire},
+			)
+			if err != nil {
+				return errors.New(err)
+			}
+		}
+
+		return nil
+	})
 
 	return errors.New(err)
 }

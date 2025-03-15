@@ -21,6 +21,10 @@ type Filling struct {
 	CompletedAt carbon.Date `json:"completed_at"`
 	// GradeLevel 等保等级
 	GradeLevel string `json:"grade_level,omitempty"`
+	// ProofAttachmentID 备案证明ID
+	ProofAttachmentIDs []string `json:"proof_attachment_ids,omitempty"`
+	// ProofAttachments 备案证明附件
+	ProofAttachments []Attachment `json:"proof_attachments,omitempty"`
 	// Description 描述
 	Description string `json:"description,omitempty"`
 	// CreatedAt 创建时间
@@ -47,6 +51,8 @@ type FillingCreate struct {
 	CompletedAt carbon.Date `json:"completed_at"`
 	// GradeLevel 等保等级
 	GradeLevel string `json:"grade_level,omitempty"`
+	// ProofAttachmentID 备案证明ID
+	ProofAttachmentIDs []string `json:"proof_attachment_ids,omitempty"`
 	// Description 描述
 	Description string `json:"description,omitempty"`
 }
@@ -68,6 +74,8 @@ type FillingUpdate struct {
 	CompletedAt carbon.Date `json:"completed_at"`
 	// GradeLevel 等保等级
 	GradeLevel string `json:"grade_level,omitempty"`
+	// ProofAttachmentID 备案证明ID
+	ProofAttachmentIDs []string `json:"proof_attachment_ids,omitempty"`
 	// Description 描述
 	Description string `json:"description,omitempty"`
 }

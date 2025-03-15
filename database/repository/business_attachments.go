@@ -44,16 +44,17 @@ func (bu *BusinessAttachment) Delete(
 // FindAttachmentIDs 查找业务关联的附件ID
 func (bu *BusinessAttachment) FindAttachmentIDs(
 	ctx context.Context,
-	businessType, businessID, attachmentType string,
+	businessType, businessID string,
+	attachmentType []string,
 ) ([]string, error) {
 	var ids []string
 
-	db := bu.db.WithContext(ctx).
+	db := session.DB(ctx, bu.db).
 		Model(&model.BusinessAttachment{}).
 		Where("business_type = ?", businessType).
 		Where("business_id = ?", businessID).
-		Where("attachment_type = ?", attachmentType).
-		Pluck("id", &ids)
+		Where("attachment_type in ?", attachmentType).
+		Pluck("attachment_id", &ids)
 
 	return ids, errors.New(db.Error)
 }
