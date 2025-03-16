@@ -83,6 +83,7 @@ func (se *Service) FindByID(ctx context.Context, id string) (*dto.Organization, 
 	return typeutil.MustConvert[*dto.Organization](org), nil
 }
 
+// Option 获取所有
 func (se *Service) Option(ctx context.Context) ([]*dto.Organization, error) {
 	orgs, err := se.repository.Option(ctx)
 

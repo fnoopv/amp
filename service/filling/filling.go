@@ -26,6 +26,7 @@ type fillingRepository interface {
 	Create(ctx context.Context, filling *model.Filling) error
 	Update(ctx context.Context, filling *model.Filling) error
 	Delete(ctx context.Context, ids []string) error
+	Option(ctx context.Context) ([]*model.Filling, error)
 }
 
 type businessAttachmentRepository interface {
@@ -209,6 +210,7 @@ func (se *Service) Update(ctx context.Context, filling *dto.FillingUpdate) error
 	return errors.New(err)
 }
 
+// Delete 删除备案
 func (se *Service) Delete(ctx context.Context, ids []string) error {
 	err := se.session.Transaction(ctx, func(ctx context.Context) error {
 		err := se.fillingRepository.Delete(ctx, ids)
@@ -226,6 +228,13 @@ func (se *Service) Delete(ctx context.Context, ids []string) error {
 	})
 
 	return errors.New(err)
+}
+
+// Option 获取所有备案
+func (se *Service) Option(ctx context.Context) ([]*dto.Filling, error) {
+	fillings, err := se.fillingRepository.Option(ctx)
+
+	return typeutil.MustConvert[[]*dto.Filling](fillings), errors.New(err)
 }
 
 // Name 返回服务名称,框架使用

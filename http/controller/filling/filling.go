@@ -17,6 +17,7 @@ type Service interface {
 	Create(ctx context.Context, filling *dto.FillingCreate) error
 	Update(ctx context.Context, filling *dto.FillingUpdate) error
 	Delete(ctx context.Context, ids []string) error
+	Option(ctx context.Context) ([]*dto.Filling, error)
 }
 
 type Controller struct {
@@ -33,6 +34,7 @@ func (co *Controller) RegisterRoutes(router *goyave.Router) {
 	subRouter := router.Subrouter("/fillings")
 	subRouter.Get("/", co.Index).ValidateQuery(filter.Validation)
 	subRouter.Post("/", co.Create).ValidateBody(CreateRequest)
+	subRouter.Get("/options", co.Option)
 	subRouter.Post("/update", co.Update).ValidateBody(UpdateRequest)
 	subRouter.Post("/delete", co.Delete).ValidateBody(DeleteRequest)
 }
@@ -86,4 +88,18 @@ func (co *Controller) Delete(response *goyave.Response, request *goyave.Request)
 	}
 
 	response.JSON(http.StatusOK, dto.SuccessResponse)
+}
+
+// Option 获取备案枚举
+func (co *Controller) Option(response *goyave.Response, request *goyave.Request) {
+	fillings, err := co.service.Option(request.Context())
+	if err != nil {
+		response.Error(err)
+		return
+	}
+
+	response.JSON(http.StatusOK, dto.CommonResponse{
+		Message: dto.SuccessMessage,
+		Data:    fillings,
+	})
 }

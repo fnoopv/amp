@@ -37,7 +37,7 @@ func (fi *Filling) Paginate(ctx context.Context, request *filter.Request) (*data
 
 // Create 创建
 func (fi *Filling) Create(ctx context.Context, filling *model.Filling) error {
-	db := fi.db.WithContext(ctx).Create(filling)
+	db := session.DB(ctx, fi.db).Create(filling)
 	return errors.New(db.Error)
 }
 
@@ -62,7 +62,15 @@ func (fi *Filling) Update(ctx context.Context, filling *model.Filling) error {
 
 // Delete 删除
 func (fi *Filling) Delete(ctx context.Context, ids []string) error {
-	db := fi.db.WithContext(ctx).Where("id in ?", ids).Delete(&model.Filling{})
+	db := session.DB(ctx, fi.db).Where("id in ?", ids).Delete(&model.Filling{})
 
 	return errors.New(db.Error)
+}
+
+// Option 获取所有备案
+func (fi *Filling) Option(ctx context.Context) ([]*model.Filling, error) {
+	fillings := []*model.Filling{}
+	db := fi.db.WithContext(ctx).Find(&fillings)
+
+	return fillings, errors.New(db.Error)
 }
