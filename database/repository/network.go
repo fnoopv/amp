@@ -27,7 +27,7 @@ func (ne *Network) Paginate(ctx context.Context, request *filter.Request) (*data
 	networks := []*model.Network{}
 
 	paginator, err := filter.Scope(
-		session.DB(ctx, ne.db).Preload("Organization").Preload("Fillings"),
+		session.DB(ctx, ne.db).Preload("Organization").Preload("Filling"),
 		request,
 		&networks,
 	)
@@ -37,43 +37,24 @@ func (ne *Network) Paginate(ctx context.Context, request *filter.Request) (*data
 
 // Create 创建
 func (ne *Network) Create(ctx context.Context, modelRecord *model.Network) error {
-	err := session.DB(ctx, ne.db).Omit("Fillings").Create(modelRecord).Error
-	if err != nil {
-		return errors.New(err)
-	}
+	db := session.DB(ctx, ne.db).Omit("Filling").Create(modelRecord)
 
-	// 更新备案关联
-	err = session.DB(ctx, ne.db).
-		Model(&model.Network{ID: modelRecord.ID}).
-		Omit("Fillings.*").
-		Association("Fillings").
-		Append(modelRecord.Fillings)
-
-	return errors.New(err)
+	return errors.New(db.Error)
 }
 
 // Update 更新
 func (ne *Network) Update(ctx context.Context, modelRecord *model.Network) error {
-	err := session.DB(ctx, ne.db).
+	db := session.DB(ctx, ne.db).
 		Model(&model.Network{ID: modelRecord.ID}).
 		Select(
 			"Name",
 			"OrganizationID",
+			"FillingID",
 			"Description",
 		).
-		Updates(modelRecord).Error
-	if err != nil {
-		return errors.New(err)
-	}
+		Updates(modelRecord)
 
-	// 更新备案关联
-	err = session.DB(ctx, ne.db).
-		Model(&model.Network{ID: modelRecord.ID}).
-		Omit("Fillings.*").
-		Association("Fillings").
-		Replace(modelRecord.Fillings)
-
-	return errors.New(err)
+	return errors.New(db.Error)
 }
 
 // Delete 删除

@@ -14,6 +14,8 @@ type Network struct {
 	Name string `json:"name" gorm:"column:name;not null"`
 	// OrganizationID 所属组织ID
 	OrganizationID null.String `json:"organization_id" gorm:"column:organization_id;default:null"`
+	// FillingID 备案ID
+	FillingID null.String `json:"filling_id" gorm:"column:filling_id;default:null"`
 	// Description 描述
 	Description string `json:"description" gorm:"column:description;default:null"`
 	// CreatedAt 创建时间
@@ -23,7 +25,7 @@ type Network struct {
 	DeletedAt gorm.DeletedAt
 
 	Organization Organization `gorm:"foreignKey:OrganizationID"`
-	Fillings     []Filling    `gorm:"many2many:filling_networks;foreignKey:ID;joinForeignKey:NetworkID;References:ID;joinReferences:FillingID"`
+	Filling      Filling      `json:"filling" gorm:"foreignKey:FillingID"`
 }
 
 // Network 网络台账表表名
