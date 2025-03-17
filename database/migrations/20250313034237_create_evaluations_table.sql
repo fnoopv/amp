@@ -13,7 +13,7 @@ CREATE TABLE evaluations (
     FOREIGN KEY (filling_id)
     REFERENCES fillings (id)
 );
-CREATE INDEX "fillings_deleted_at_idx" ON "fillings" ("deleted_at");
+CREATE INDEX "evaluations_deleted_at_idx" ON "fillings" ("deleted_at");
 
 -- migrate:down
 DROP TABLE IF EXISTS evaluations;

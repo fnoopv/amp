@@ -14,6 +14,7 @@ import (
 	"github.com/fnoopv/amp/pkg/migrate"
 	"github.com/fnoopv/amp/service/application"
 	"github.com/fnoopv/amp/service/attachment"
+	"github.com/fnoopv/amp/service/domain"
 	"github.com/fnoopv/amp/service/evaluation"
 	"github.com/fnoopv/amp/service/filling"
 	"github.com/fnoopv/amp/service/network"
@@ -152,4 +153,8 @@ func registerServices(server *goyave.Server) {
 	networkRepository := repository.NewNetwork(server.DB())
 	networkService := network.NewService(session, networkRepository, fillingRepository)
 	server.RegisterService(networkService)
+
+	domainRepository := repository.NewDomain(server.DB())
+	domainService := domain.NewService(session, domainRepository, fillingRepository)
+	server.RegisterService(domainService)
 }

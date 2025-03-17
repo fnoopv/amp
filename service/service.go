@@ -9,4 +9,5 @@ const (
 	Filling      = "filling"
 	Evaluation   = "evaluation"
 	Network      = "network"
+	Domain       = "doamin"
 )

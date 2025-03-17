@@ -4,6 +4,7 @@ import (
 	"github.com/fnoopv/amp/dto"
 	"github.com/fnoopv/amp/http/controller/application"
 	"github.com/fnoopv/amp/http/controller/attachment"
+	"github.com/fnoopv/amp/http/controller/domain"
 	"github.com/fnoopv/amp/http/controller/evaluation"
 	"github.com/fnoopv/amp/http/controller/filling"
 	"github.com/fnoopv/amp/http/controller/network"
@@ -58,4 +59,5 @@ func Register(server *goyave.Server, router *goyave.Router) {
 	apiV1.Controller(&filling.Controller{})
 	apiV1.Controller(&evaluation.Controller{})
 	apiV1.Controller(&network.Controller{})
+	apiV1.Controller(&domain.Controller{})
 }

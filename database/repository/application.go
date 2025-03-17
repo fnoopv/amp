@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/fnoopv/amp/database/model"
 	"gorm.io/gorm"
@@ -65,7 +64,6 @@ func (ap *Application) Update(ctx context.Context, app *model.Application) error
 		return errors.New(err)
 	}
 
-	fmt.Printf("rf: %v\n", app.Fillings)
 	// 更新备案关联
 	err = session.DB(ctx, ap.db).
 		Model(&model.Application{ID: app.ID}).
