@@ -45,7 +45,7 @@ func (co *Controller) Index(response *goyave.Response, request *goyave.Request) 
 	}
 
 	response.JSON(http.StatusOK, dto.CommonResponse{
-		Message: dto.SuccessMessage,
+		Message: dto.ResponseSuccessMessage,
 		Data:    paginator,
 	})
 }
@@ -56,7 +56,7 @@ func (co *Controller) Create(response *goyave.Response, request *goyave.Request)
 	if response.WriteDBError(err) {
 		return
 	}
-	response.JSON(http.StatusOK, dto.SuccessResponse)
+	response.JSON(http.StatusOK, dto.ResponseSuccess)
 }
 
 func (co *Controller) Update(response *goyave.Response, request *goyave.Request) {
@@ -67,7 +67,7 @@ func (co *Controller) Update(response *goyave.Response, request *goyave.Request)
 		return
 	}
 
-	response.JSON(http.StatusOK, dto.SuccessResponse)
+	response.JSON(http.StatusOK, dto.ResponseSuccess)
 }
 
 func (co *Controller) Delete(response *goyave.Response, request *goyave.Request) {
@@ -77,5 +77,5 @@ func (co *Controller) Delete(response *goyave.Response, request *goyave.Request)
 		return
 	}
 
-	response.JSON(http.StatusOK, dto.SuccessResponse)
+	response.JSON(http.StatusOK, dto.ResponseSuccess)
 }

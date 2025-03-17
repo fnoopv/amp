@@ -50,7 +50,7 @@ func (co *Controller) Index(response *goyave.Response, request *goyave.Request) 
 	}
 
 	response.JSON(http.StatusOK, dto.CommonResponse{
-		Message: dto.SuccessMessage,
+		Message: dto.ResponseSuccessMessage,
 		Data:    evaluations,
 	})
 }
@@ -65,7 +65,7 @@ func (co *Controller) Create(response *goyave.Response, request *goyave.Request)
 		return
 	}
 
-	response.JSON(http.StatusOK, dto.SuccessResponse)
+	response.JSON(http.StatusOK, dto.ResponseSuccess)
 }
 
 // Update 更新
@@ -78,7 +78,7 @@ func (co *Controller) Update(response *goyave.Response, request *goyave.Request)
 		return
 	}
 
-	response.JSON(http.StatusOK, dto.SuccessResponse)
+	response.JSON(http.StatusOK, dto.ResponseSuccess)
 }
 
 // Delete 删除
@@ -91,5 +91,5 @@ func (co *Controller) Delete(response *goyave.Response, request *goyave.Request)
 		return
 	}
 
-	response.JSON(http.StatusOK, dto.SuccessResponse)
+	response.JSON(http.StatusOK, dto.ResponseSuccess)
 }

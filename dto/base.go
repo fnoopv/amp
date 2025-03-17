@@ -7,11 +7,11 @@ type CommonResponse struct {
 }
 
 var (
-	// SuccessMessage 成功且无需返回数据
-	SuccessResponse = &CommonResponse{
-		Message: SuccessMessage,
+	// ResponseSuccess 成功且无需返回数据
+	ResponseSuccess = &CommonResponse{
+		Message: ResponseSuccessMessage,
 		Data:    nil,
 	}
-	// SuccessMessage 默认成功消息
-	SuccessMessage = "success"
+	// ResponseSuccessMessage 默认成功消息
+	ResponseSuccessMessage = "success"
 )

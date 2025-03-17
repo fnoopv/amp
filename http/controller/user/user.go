@@ -52,7 +52,7 @@ func (co *Controller) Index(response *goyave.Response, request *goyave.Request) 
 	}
 
 	response.JSON(http.StatusOK, dto.CommonResponse{
-		Message: dto.SuccessMessage,
+		Message: dto.ResponseSuccessMessage,
 		Data:    paginator,
 	})
 }
@@ -65,7 +65,7 @@ func (co *Controller) Create(response *goyave.Response, request *goyave.Request)
 		response.Error(err)
 	}
 	response.JSON(http.StatusOK, dto.CommonResponse{
-		Message: dto.SuccessMessage,
+		Message: dto.ResponseSuccessMessage,
 		Data:    dto.UserCreateResponse{Password: pwd},
 	})
 }
@@ -79,7 +79,7 @@ func (co *Controller) Update(response *goyave.Response, request *goyave.Request)
 		response.Error(err)
 	}
 
-	response.JSON(http.StatusOK, dto.SuccessResponse)
+	response.JSON(http.StatusOK, dto.ResponseSuccess)
 }
 
 // Delete 删除单个用户
@@ -90,7 +90,7 @@ func (co *Controller) Delete(response *goyave.Response, request *goyave.Request)
 		response.Error(err)
 	}
 
-	response.JSON(http.StatusOK, dto.SuccessResponse)
+	response.JSON(http.StatusOK, dto.ResponseSuccess)
 }
 
 // Delete 删除单个用户
@@ -103,7 +103,7 @@ func (co *Controller) FindByID(response *goyave.Response, request *goyave.Reques
 	}
 
 	response.JSON(http.StatusOK, dto.CommonResponse{
-		Message: dto.SuccessMessage,
+		Message: dto.ResponseSuccessMessage,
 		Data:    user,
 	})
 }
@@ -115,7 +115,7 @@ func (co *Controller) UpdatePassword(response *goyave.Response, request *goyave.
 		response.Error(err)
 	}
 
-	response.JSON(http.StatusOK, dto.SuccessResponse)
+	response.JSON(http.StatusOK, dto.ResponseSuccess)
 }
 
 // ResetPassword 重置用户密码
@@ -128,7 +128,7 @@ func (co *Controller) ResetPassword(response *goyave.Response, request *goyave.R
 	}
 
 	response.JSON(http.StatusOK, dto.CommonResponse{
-		Message: dto.SuccessMessage,
+		Message: dto.ResponseSuccessMessage,
 		Data:    dto.UserResetPasswordResponse{Password: pwd},
 	})
 }

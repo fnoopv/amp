@@ -49,7 +49,7 @@ func (co *Controller) Index(response *goyave.Response, request *goyave.Request) 
 	}
 
 	response.JSON(http.StatusOK, dto.CommonResponse{
-		Message: dto.SuccessMessage,
+		Message: dto.ResponseSuccessMessage,
 		Data:    paginator,
 	})
 }
@@ -63,7 +63,7 @@ func (co *Controller) Create(response *goyave.Response, request *goyave.Request)
 		response.Error(err)
 	}
 
-	response.JSON(http.StatusOK, dto.SuccessResponse)
+	response.JSON(http.StatusOK, dto.ResponseSuccess)
 }
 
 // Update 更新组织信息
@@ -75,7 +75,7 @@ func (co *Controller) Update(response *goyave.Response, request *goyave.Request)
 		response.Error(err)
 	}
 
-	response.JSON(http.StatusOK, dto.SuccessResponse)
+	response.JSON(http.StatusOK, dto.ResponseSuccess)
 }
 
 // Delete 删除组织信息
@@ -87,7 +87,7 @@ func (co *Controller) Delete(response *goyave.Response, request *goyave.Request)
 		response.Error(err)
 	}
 
-	response.JSON(http.StatusOK, dto.SuccessResponse)
+	response.JSON(http.StatusOK, dto.ResponseSuccess)
 }
 
 // FindByID 根据id获取组织信息
@@ -100,7 +100,7 @@ func (co *Controller) FindByID(response *goyave.Response, request *goyave.Reques
 	}
 
 	response.JSON(http.StatusOK, dto.CommonResponse{
-		Message: dto.SuccessMessage,
+		Message: dto.ResponseSuccessMessage,
 		Data:    org,
 	})
 }
@@ -113,7 +113,7 @@ func (co *Controller) Option(response *goyave.Response, request *goyave.Request)
 	}
 
 	response.JSON(http.StatusOK, dto.CommonResponse{
-		Message: dto.SuccessMessage,
+		Message: dto.ResponseSuccessMessage,
 		Data:    orgs,
 	})
 }

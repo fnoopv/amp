@@ -119,7 +119,7 @@ func (co *Controller) Info(response *goyave.Response, request *goyave.Request) {
 	}
 
 	response.JSON(http.StatusOK, dto.CommonResponse{
-		Message: dto.SuccessMessage,
+		Message: dto.ResponseSuccessMessage,
 		Data:    typeutil.MustConvert[*dto.Attachment](att),
 	})
 }

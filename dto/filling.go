@@ -10,7 +10,7 @@ type Filling struct {
 	// Name 名称
 	Name string `json:"name"`
 	// OrganizationID 所属组织ID
-	OrganizationID string `json:"organization_id"`
+	OrganizationID string `json:"organization_id,omitempty"`
 	// KindPrimary 备案大类
 	KindPrimary string `json:"kind_primary"`
 	// KindSecondary 备案小类
@@ -44,17 +44,17 @@ type FillingCreate struct {
 	// KindPrimary 备案大类
 	KindPrimary string `json:"kind_primary"`
 	// KindSecondary 备案小类
-	KindSecondary string `json:"kind_secondary,omitempty"`
+	KindSecondary string `json:"kind_secondary"`
 	// SerialNumber 备案编号
 	SerialNumber string `json:"serial_number"`
 	// CompletedAt 备案时间
 	CompletedAt carbon.Date `json:"completed_at"`
 	// GradeLevel 等保等级
-	GradeLevel string `json:"grade_level,omitempty"`
+	GradeLevel string `json:"grade_level"`
 	// ProofAttachmentID 备案证明ID
-	ProofAttachmentIDs []string `json:"proof_attachment_ids,omitempty"`
+	ProofAttachmentIDs []string `json:"proof_attachment_ids"`
 	// Description 描述
-	Description string `json:"description,omitempty"`
+	Description string `json:"description"`
 }
 
 type FillingUpdate struct {
@@ -67,17 +67,17 @@ type FillingUpdate struct {
 	// KindPrimary 备案大类
 	KindPrimary string `json:"kind_primary"`
 	// KindSecondary 备案小类
-	KindSecondary string `json:"kind_secondary,omitempty"`
+	KindSecondary string `json:"kind_secondary"`
 	// SerialNumber 备案编号
 	SerialNumber string `json:"serial_number"`
 	// CompletedAt 备案时间
 	CompletedAt carbon.Date `json:"completed_at"`
 	// GradeLevel 等保等级
-	GradeLevel string `json:"grade_level,omitempty"`
+	GradeLevel string `json:"grade_level"`
 	// ProofAttachmentID 备案证明ID
-	ProofAttachmentIDs []string `json:"proof_attachment_ids,omitempty"`
+	ProofAttachmentIDs []string `json:"proof_attachment_ids"`
 	// Description 描述
-	Description string `json:"description,omitempty"`
+	Description string `json:"description"`
 }
 
 type FillingDelete struct {
