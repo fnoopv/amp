@@ -29,15 +29,15 @@ type Organization struct {
 // OrganizationCreate 新增组织架构
 type OrganizationCreate struct {
 	// ParentID 上级组织id, 为空时是顶级组织
-	ParentID string `json:"parent_id,omitempty"`
+	ParentID string `json:"parent_id"`
 	// Name 组织名称
 	Name string `json:"name"`
 	// Kind 组织类型 company-公司,department-部门
 	Kind string `json:"kind"`
 	// Order 组织排序
-	Order int `json:"order,omitempty"`
+	Order int `json:"order"`
 	// Description 描述
-	Description string `json:"description,omitempty,omitzero"`
+	Description string `json:"description"`
 }
 
 // OrganizationUpdate 组织更新
@@ -45,15 +45,15 @@ type OrganizationUpdate struct {
 	// ID 唯一ID
 	ID string `json:"id"`
 	// ParentID 上级组织id, 为空时是顶级组织
-	ParentID string `json:"parent_id,omitempty"`
+	ParentID string `json:"parent_id"`
 	// Name 组织名称
 	Name string `json:"name"`
 	// Kind 组织类型 company-公司,department-部门
 	Kind string `json:"kind"`
 	// Order 组织排序
-	Order int `json:"order,omitempty"`
+	Order int `json:"order"`
 	// Description 描述
-	Description string `json:"description,omitempty,omitzero"`
+	Description string `json:"description"`
 }
 
 type OrganizationDelete struct {

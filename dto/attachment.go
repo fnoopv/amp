@@ -34,10 +34,6 @@ type AttachmentInternal struct {
 	UploadAt carbon.DateTime `json:"upload_at"`
 	// SHA256Sum SHA256校验值
 	SHA256Sum string `json:"sha256_sum"`
-	// CreatedAt 创建时间
-	CreatedAt carbon.DateTime `json:"created_at" gorm:"column:created_at;autoCreateTime;type:datetime"`
-	// UpdatedAt 更新时间
-	UpdatedAt carbon.DateTime `json:"updated_at" gorm:"column:updated_at;autoUpdateTime;type:datetime"`
 }
 type AttachmentCreate struct {
 	// ID 唯一ID

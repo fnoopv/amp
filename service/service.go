@@ -8,4 +8,5 @@ const (
 	Attachment   = "attachment"
 	Filling      = "filling"
 	Evaluation   = "evaluation"
+	Network      = "network"
 )

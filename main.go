@@ -16,6 +16,7 @@ import (
 	"github.com/fnoopv/amp/service/attachment"
 	"github.com/fnoopv/amp/service/evaluation"
 	"github.com/fnoopv/amp/service/filling"
+	"github.com/fnoopv/amp/service/network"
 	"github.com/fnoopv/amp/service/organization"
 	"github.com/fnoopv/amp/service/user"
 
@@ -147,4 +148,8 @@ func registerServices(server *goyave.Server) {
 		attachmentRepository,
 	)
 	server.RegisterService(evaluationService)
+
+	networkRepository := repository.NewNetwork(server.DB())
+	networkService := network.NewService(session, networkRepository, fillingRepository)
+	server.RegisterService(networkService)
 }

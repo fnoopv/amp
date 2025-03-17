@@ -44,7 +44,14 @@ func NewService(session session.Session, appRepository appRepository, fillingRep
 func (se *Service) Paginate(ctx context.Context, request *filter.Request) (*database.PaginatorDTO[*dto.Application], error) {
 	paginator, err := se.appRepository.Paginate(ctx, request)
 
-	return typeutil.MustConvert[*database.PaginatorDTO[*dto.Application]](paginator), errors.New(err)
+	dtoPaginator := typeutil.MustConvert[*database.PaginatorDTO[*dto.Application]](paginator)
+	for _, v := range dtoPaginator.Records {
+		v.FillingIDs = lo.Map(v.Fillings, func(item dto.Filling, _ int) string {
+			return item.ID
+		})
+	}
+
+	return dtoPaginator, errors.New(err)
 }
 
 func (se *Service) Create(ctx context.Context, app *dto.ApplicationCreate) error {

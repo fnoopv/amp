@@ -35,6 +35,7 @@ type Filling struct {
 	Organization Organization  `gorm:"foreignKey:OrganizationID"`
 	Evaluations  []Evaluation  `gorm:"foreignKey:FillingID"`
 	Applications []Application `gorm:"many2many:application_fillings;foreignKey:ID;joinForeignKey:FillingID;References:ID;joinReferences:ApplicationID"`
+	Networks     []Network     `gorm:"many2many:filling_networks;foreignKey:ID;joinForeignKey:FillingID;References:ID;joinReferences:NetworkID"`
 }
 
 // Network 备案台账表表名
