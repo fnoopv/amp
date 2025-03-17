@@ -10,7 +10,7 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.6.0
 	github.com/guregu/null/v6 v6.0.0
-	github.com/redis/rueidis v1.0.55
+	github.com/redis/rueidis v1.0.56
 	github.com/samber/lo v1.49.1
 	golang.org/x/crypto v0.36.0
 	gorm.io/gorm v1.25.12
