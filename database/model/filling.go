@@ -32,8 +32,9 @@ type Filling struct {
 	UpdatedAt carbon.DateTime `json:"updated_at" gorm:"column:updated_at;autoUpdateTime;type:datetime"`
 	DeletedAt gorm.DeletedAt
 
-	Organization Organization `gorm:"foreignKey:OrganizationID"`
-	Evaluations  []Evaluation `gorm:"foreignKey:FillingID"`
+	Organization Organization  `gorm:"foreignKey:OrganizationID"`
+	Evaluations  []Evaluation  `gorm:"foreignKey:FillingID"`
+	Applications []Application `gorm:"many2many:application_fillings;foreignKey:ID;joinForeignKey:FillingID;References:ID;joinReferences:ApplicationID"`
 }
 
 // Network 备案台账表表名

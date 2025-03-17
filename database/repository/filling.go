@@ -67,6 +67,15 @@ func (fi *Filling) Delete(ctx context.Context, ids []string) error {
 	return errors.New(db.Error)
 }
 
+// FindByIDs 根据ID获取所有备案
+func (fi *Filling) FindByIDs(ctx context.Context, ids []string) ([]*model.Filling, error) {
+	fillings := []*model.Filling{}
+
+	db := session.DB(ctx, fi.db).Where("id in ?", ids).Find(&fillings)
+
+	return fillings, errors.New(db.Error)
+}
+
 // Option 获取所有备案
 func (fi *Filling) Option(ctx context.Context) ([]*model.Filling, error) {
 	fillings := []*model.Filling{}

@@ -25,6 +25,7 @@ type Application struct {
 	DeletedAt gorm.DeletedAt
 
 	Organization Organization `gorm:"foreignKey:OrganizationID"`
+	Fillings     []Filling    `gorm:"many2many:application_fillings;foreignKey:ID;joinForeignKey:ApplicationID;References:ID;joinReferences:FillingID"`
 }
 
 // Application 应用表表名

@@ -126,10 +126,6 @@ func registerServices(server *goyave.Server) {
 	organizationService := organization.NewService(organizationRepository)
 	server.RegisterService(organizationService)
 
-	appRepository := repository.NewApplication(server.DB())
-	appService := application.NewService(appRepository)
-	server.RegisterService(appService)
-
 	fillingRepository := repository.NewFilling(server.DB())
 	fillingService := filling.NewService(
 		session,
@@ -138,6 +134,10 @@ func registerServices(server *goyave.Server) {
 		attachmentRepository,
 	)
 	server.RegisterService(fillingService)
+
+	appRepository := repository.NewApplication(server.DB())
+	appService := application.NewService(session, appRepository, fillingRepository)
+	server.RegisterService(appService)
 
 	evaluationRepository := repository.NewEvaluation(server.DB())
 	evaluationService := evaluation.NewService(
