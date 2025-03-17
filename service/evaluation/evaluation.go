@@ -90,12 +90,12 @@ func (se *Service) FindByFillingID(ctx context.Context, fillingID string) ([]*dt
 				if err != nil {
 					return errors.New(err)
 				}
-				attachments, err := typeutil.Convert[[]*dto.Attachment](&modelAttachments)
+				attachments, err := typeutil.Convert[*[]dto.Attachment](&modelAttachments)
 				if err != nil {
 					return errors.New(err)
 				}
 
-				evaluation.EvaluationAttachments = attachments
+				evaluation.EvaluationAttachments = *attachments
 			}
 			rapireIDs, err := se.businessAttachmentRepository.FindAttachmentIDs(
 				ctx,
@@ -112,12 +112,12 @@ func (se *Service) FindByFillingID(ctx context.Context, fillingID string) ([]*dt
 				if err != nil {
 					return errors.New(err)
 				}
-				attachments, err := typeutil.Convert[[]*dto.Attachment](&modelAttachments)
+				attachments, err := typeutil.Convert[*[]dto.Attachment](&modelAttachments)
 				if err != nil {
 					return errors.New(err)
 				}
 
-				evaluation.RepairAttachments = attachments
+				evaluation.RepairAttachments = *attachments
 			}
 		}
 

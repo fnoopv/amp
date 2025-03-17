@@ -14,11 +14,11 @@ type Evaluation struct {
 	// EvaluationAttachmentIDs 测评报告ID
 	EvaluationAttachmentIDs []string `json:"evaluation_attachment_ids,omitempty"`
 	// EvaluationAttachments 测评报告
-	EvaluationAttachments []*Attachment `json:"evaluation_attachments,omitempty"`
+	EvaluationAttachments []Attachment `json:"evaluation_attachments,omitempty"`
 	// RepairAttachmentIDs 整改报告ID
 	RepairAttachmentIDs []string `json:"repair_attachment_ids,omitempty"`
 	// RepairAttachments 整改报告
-	RepairAttachments []*Attachment `json:"repair_attachments,omitempty"`
+	RepairAttachments []Attachment `json:"repair_attachments,omitempty"`
 	// CreatedAt 创建时间
 	CreatedAt carbon.DateTime `json:"created_at"`
 	// UpdatedAt 更新时间

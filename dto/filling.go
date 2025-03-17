@@ -11,6 +11,10 @@ type Filling struct {
 	Name string `json:"name"`
 	// OrganizationID 所属组织ID
 	OrganizationID string `json:"organization_id,omitempty"`
+	// Organization 所属组织
+	Organization Organization `json:"organization,omitzero"`
+	// Evaluations 关联测评
+	Evaluations []Evaluation `json:"evaluations,omitempty"`
 	// KindPrimary 备案大类
 	KindPrimary string `json:"kind_primary"`
 	// KindSecondary 备案小类
@@ -31,9 +35,6 @@ type Filling struct {
 	CreatedAt carbon.DateTime `json:"created_at"`
 	// UpdatedAt 更新时间
 	UpdatedAt carbon.DateTime `json:"updated_at"`
-
-	Organization Organization `json:"organization,omitzero"`
-	Evaluations  []Evaluation `json:"evaluations,omitzero,omitempty"`
 }
 
 type FillingCreate struct {

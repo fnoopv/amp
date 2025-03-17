@@ -17,13 +17,13 @@ type Organization struct {
 	// Order 组织排序
 	Order int `json:"order,omitempty"`
 	// Description 描述
-	Description string `json:"description,omitempty,omitzero"`
+	Description string `json:"description,omitempty"`
 	// CreatedAt 创建时间
 	CreatedAt carbon.DateTime `json:"created_at"`
 	// UpdatedAt 更新时间
 	UpdatedAt carbon.DateTime `json:"updated_at"`
-
-	Children []*Organization `json:"children,omitempty,omitzero"`
+	// Children 子组织
+	Children []Organization `json:"children,omitempty,omitzero"`
 }
 
 // OrganizationCreate 新增组织架构
