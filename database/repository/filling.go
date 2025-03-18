@@ -27,7 +27,12 @@ func (fi *Filling) Paginate(ctx context.Context, request *filter.Request) (*data
 	fillings := []*model.Filling{}
 
 	paginator, err := filter.Scope(
-		session.DB(ctx, fi.db).Preload("Organization").Preload("Evaluations"),
+		session.DB(ctx, fi.db).
+			Preload("Organization").
+			Preload("Evaluations").
+			Preload("Applications").
+			Preload("Networks").
+			Preload("Domains"),
 		request,
 		&fillings,
 	)

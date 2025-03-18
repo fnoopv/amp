@@ -15,6 +15,12 @@ type Filling struct {
 	Organization Organization `json:"organization,omitzero"`
 	// Evaluations 关联测评
 	Evaluations []Evaluation `json:"evaluations,omitempty"`
+	// Applications 关联应用
+	Applications []Application `json:"applications,omitempty"`
+	// Networks 关联网络
+	Networks []Network `json:"networks,omitempty"`
+	// Domains 关联域名
+	Domains []Domain `json:"domains,omitempty"`
 	// KindPrimary 备案大类
 	KindPrimary string `json:"kind_primary"`
 	// KindSecondary 备案小类
