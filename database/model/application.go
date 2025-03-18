@@ -26,6 +26,7 @@ type Application struct {
 
 	Organization Organization `gorm:"foreignKey:OrganizationID"`
 	Fillings     []Filling    `gorm:"many2many:application_fillings;foreignKey:ID;joinForeignKey:ApplicationID;References:ID;joinReferences:FillingID"`
+	Networks     []Network    `gorm:"many2many:application_networks;foreignKey:ID;joinForeignKey:ApplicationID;References:ID;joinReferences:NetworkID"`
 }
 
 // Application 应用表表名

@@ -27,17 +27,28 @@ type fillingRepository interface {
 	FindByIDs(ctx context.Context, ids []string) ([]*model.Filling, error)
 }
 
+type networkRepository interface {
+	FindByIDs(ctx context.Context, ids []string) ([]*model.Network, error)
+}
+
 type Service struct {
 	session           session.Session
 	appRepository     appRepository
 	fillingRepository fillingRepository
+	networkRepository networkRepository
 }
 
-func NewService(session session.Session, appRepository appRepository, fillingRepository fillingRepository) *Service {
+func NewService(
+	session session.Session,
+	appRepository appRepository,
+	fillingRepository fillingRepository,
+	networkRepository networkRepository,
+) *Service {
 	return &Service{
 		session:           session,
 		appRepository:     appRepository,
 		fillingRepository: fillingRepository,
+		networkRepository: networkRepository,
 	}
 }
 
@@ -47,6 +58,9 @@ func (se *Service) Paginate(ctx context.Context, request *filter.Request) (*data
 	dtoPaginator := typeutil.MustConvert[*database.PaginatorDTO[*dto.Application]](paginator)
 	for _, v := range dtoPaginator.Records {
 		v.FillingIDs = lo.Map(v.Fillings, func(item dto.Filling, _ int) string {
+			return item.ID
+		})
+		v.NetworkIDs = lo.Map(v.Networks, func(item dto.Network, index int) string {
 			return item.ID
 		})
 	}
@@ -76,6 +90,23 @@ func (se *Service) Create(ctx context.Context, app *dto.ApplicationCreate) error
 
 			modelApp.Fillings = lo.Map(app.FillingIDs, func(item string, index int) model.Filling {
 				return model.Filling{
+					ID: item,
+				}
+			})
+		}
+		// 处理关联网络
+		if len(app.NetworkIDs) > 0 {
+			networks, err := se.networkRepository.FindByIDs(ctx, app.NetworkIDs)
+			if err != nil {
+				return errors.New(err)
+			}
+
+			if len(networks) != len(app.NetworkIDs) {
+				return errors.New(fmt.Errorf("some network is not exist: %v", app.NetworkIDs))
+			}
+
+			modelApp.Networks = lo.Map(app.NetworkIDs, func(item string, index int) model.Network {
+				return model.Network{
 					ID: item,
 				}
 			})
@@ -110,6 +141,23 @@ func (se *Service) Update(ctx context.Context, app *dto.ApplicationUpdate) error
 
 			modelApp.Fillings = lo.Map(app.FillingIDs, func(item string, index int) model.Filling {
 				return model.Filling{
+					ID: item,
+				}
+			})
+		}
+		// 处理关联网络
+		if len(app.NetworkIDs) > 0 {
+			networks, err := se.networkRepository.FindByIDs(ctx, app.NetworkIDs)
+			if err != nil {
+				return errors.New(err)
+			}
+
+			if len(networks) != len(app.NetworkIDs) {
+				return errors.New(fmt.Errorf("some network is not exist: %v", app.NetworkIDs))
+			}
+
+			modelApp.Networks = lo.Map(app.NetworkIDs, func(item string, index int) model.Network {
+				return model.Network{
 					ID: item,
 				}
 			})

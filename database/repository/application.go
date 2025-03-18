@@ -29,7 +29,7 @@ func (ap *Application) Paginate(ctx context.Context, request *filter.Request) (
 	apps := []*model.Application{}
 
 	paginator, err := filter.Scope(
-		session.DB(ctx, ap.db).Preload("Organization").Preload("Fillings"),
+		session.DB(ctx, ap.db).Preload("Organization").Preload("Fillings").Preload("Networks"),
 		request,
 		&apps,
 	)
@@ -39,7 +39,7 @@ func (ap *Application) Paginate(ctx context.Context, request *filter.Request) (
 
 // Create 创建
 func (ap *Application) Create(ctx context.Context, app *model.Application) error {
-	err := session.DB(ctx, ap.db).Omit("Fillings").Create(app).Error
+	err := session.DB(ctx, ap.db).Omit("Fillings").Omit("Networks").Create(app).Error
 	if err != nil {
 		return errors.New(err)
 	}
@@ -50,6 +50,16 @@ func (ap *Application) Create(ctx context.Context, app *model.Application) error
 		Omit("Fillings.*").
 		Association("Fillings").
 		Replace(app.Fillings)
+	if err != nil {
+		return errors.New(err)
+	}
+
+	// 更新网络关联
+	err = session.DB(ctx, ap.db).
+		Model(&model.Application{ID: app.ID}).
+		Omit("Networks.*").
+		Association("Networks").
+		Replace(app.Networks)
 
 	return errors.New(err)
 }
@@ -70,6 +80,16 @@ func (ap *Application) Update(ctx context.Context, app *model.Application) error
 		Omit("Fillings.*").
 		Association("Fillings").
 		Replace(app.Fillings)
+	if err != nil {
+		return errors.New(err)
+	}
+
+	// 更新网络关联
+	err = session.DB(ctx, ap.db).
+		Model(&model.Application{ID: app.ID}).
+		Omit("Networks.*").
+		Association("Networks").
+		Replace(app.Networks)
 
 	return errors.New(err)
 }

@@ -24,8 +24,9 @@ type Network struct {
 	UpdatedAt carbon.DateTime `json:"updated_at" gorm:"column:updated_at;autoUpdateTime;type:datetime"`
 	DeletedAt gorm.DeletedAt
 
-	Organization Organization `gorm:"foreignKey:OrganizationID"`
-	Filling      Filling      `json:"filling" gorm:"foreignKey:FillingID"`
+	Organization Organization  `gorm:"foreignKey:OrganizationID"`
+	Filling      Filling       `json:"filling" gorm:"foreignKey:FillingID"`
+	Applications []Application `gorm:"many2many:application_networks;foreignKey:ID;joinForeignKey:NetworkID;References:ID;joinReferences:ApplicationID"`
 }
 
 // Network 网络台账表表名

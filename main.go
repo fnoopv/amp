@@ -137,8 +137,16 @@ func registerServices(server *goyave.Server) {
 	)
 	server.RegisterService(fillingService)
 
+	networkRepository := repository.NewNetwork(server.DB())
+	networkService := network.NewService(session, networkRepository, fillingRepository)
+	server.RegisterService(networkService)
+
+	domainRepository := repository.NewDomain(server.DB())
+	domainService := domain.NewService(session, domainRepository, fillingRepository)
+	server.RegisterService(domainService)
+
 	appRepository := repository.NewApplication(server.DB())
-	appService := application.NewService(session, appRepository, fillingRepository)
+	appService := application.NewService(session, appRepository, fillingRepository, networkRepository)
 	server.RegisterService(appService)
 
 	evaluationRepository := repository.NewEvaluation(server.DB())
@@ -149,12 +157,4 @@ func registerServices(server *goyave.Server) {
 		attachmentRepository,
 	)
 	server.RegisterService(evaluationService)
-
-	networkRepository := repository.NewNetwork(server.DB())
-	networkService := network.NewService(session, networkRepository, fillingRepository)
-	server.RegisterService(networkService)
-
-	domainRepository := repository.NewDomain(server.DB())
-	domainService := domain.NewService(session, domainRepository, fillingRepository)
-	server.RegisterService(domainService)
 }
