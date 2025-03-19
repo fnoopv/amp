@@ -26,9 +26,19 @@ func (ap *Application) Paginate(ctx context.Context, request *filter.Request) (
 	*database.Paginator[*model.Application],
 	error,
 ) {
+	settings := &filter.Settings[*model.Application]{
+		DisableJoin:   true,
+		DisableFields: true,
+		// 搜索设置
+		FieldsSearch:   []string{"name"},
+		SearchOperator: filter.Operators["$cout"],
+
+		// 排序设置
+		DefaultSort: []*filter.Sort{{Field: "updated_at", Order: filter.SortDescending}},
+	}
 	apps := []*model.Application{}
 
-	paginator, err := filter.Scope(
+	paginator, err := settings.Scope(
 		session.DB(ctx, ap.db).Preload("Organization").Preload("Fillings").Preload("Networks"),
 		request,
 		&apps,
