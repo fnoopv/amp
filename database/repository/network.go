@@ -24,9 +24,19 @@ func NewNetwork(db *gorm.DB) *Network {
 
 // Paginate 返回分页器
 func (ne *Network) Paginate(ctx context.Context, request *filter.Request) (*database.Paginator[*model.Network], error) {
+	settings := &filter.Settings[*model.Network]{
+		DisableJoin:   true,
+		DisableFields: true,
+		// 搜索设置
+		FieldsSearch:   []string{"name"},
+		SearchOperator: filter.Operators["$cout"],
+
+		// 排序设置
+		DefaultSort: []*filter.Sort{{Field: "updated_at", Order: filter.SortDescending}},
+	}
 	networks := []*model.Network{}
 
-	paginator, err := filter.Scope(
+	paginator, err := settings.Scope(
 		session.DB(ctx, ne.db).Preload("Organization").Preload("Filling"),
 		request,
 		&networks,

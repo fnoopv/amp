@@ -24,9 +24,19 @@ func NewDomain(db *gorm.DB) *Domain {
 
 // Paginate 返回分页器
 func (ne *Domain) Paginate(ctx context.Context, request *filter.Request) (*database.Paginator[*model.Domain], error) {
+	settings := &filter.Settings[*model.Domain]{
+		DisableJoin:   true,
+		DisableFields: true,
+		// 搜索设置
+		FieldsSearch:   []string{"domain"},
+		SearchOperator: filter.Operators["$cout"],
+
+		// 排序设置
+		DefaultSort: []*filter.Sort{{Field: "updated_at", Order: filter.SortDescending}},
+	}
 	records := []*model.Domain{}
 
-	paginator, err := filter.Scope(
+	paginator, err := settings.Scope(
 		session.DB(ctx, ne.db).Preload("Organization").Preload("Fillings"),
 		request,
 		&records,
